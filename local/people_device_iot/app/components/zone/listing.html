@@ -1,0 +1,52 @@
+<style type="text/css">
+.city-item {
+    padding: 10px;
+    cursor: pointer;
+}
+
+.city-content {
+    border: 1px solid #CCC;
+    border-radius: 5px;
+}
+
+.img-responsive .img-center {
+    margin: 0 auto;
+    display: inline;
+}
+
+.imgcity {
+    width: 100%;
+    height: 180px;
+    padding: 0px;
+}
+
+.cityname {
+    border-bottom: 1px solid #CCC;
+    padding: 10px;
+    margin-bottom: 0px;
+}
+
+.zonenumber {
+    float: right;
+}
+</style>
+<div id="breadcrumb">
+    <div class="container">
+        <ol class="breadcrumb">
+            <li><a ui-sref="home.location.zone">{{locationName}}</a></li>
+        </ol>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="alert alert-info" ng-show="isShow">
+            <strong>Note!</strong> No zone in this location.
+        </div>
+        <div class="city-item col-md-2" ng-repeat="zone in listZones" ng-click="deployZone(zone.id,zone.name)">
+            <div class="city-content">
+                <p class="cityname">{{zone.name}}<span class="zonenumber  badge">{{zone.staffnumber}}</span></p>
+                <img class=".img-responsive .img-center imgcity" ng-src="{{zone.zoneimage}}" ng-model="data.drillId">
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,40 @@
+<div id="breadcrumb">
+    <div class="container">
+        <ol class="breadcrumb">
+            <li><a ui-sref="home.profile">Notification</a></li>
+        </ol>
+    </div>
+</div>
+<div class="container profile">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="col-sm-6 pull-left">
+                <div class="row">
+                    <h2>Basic information</h2>
+                </div>
+                <div class="row" data-ng-init="getStaffInfo()">
+                    <div class="input-group custom-control">
+                        <label>Title</label>
+                        <input type="text" class="form-control" ng-model="title" disabled>
+                    </div>
+                    <div class="input-group custom-control">
+                        <label>Message</label>
+                        <textarea rows="7" type="text" class="form-control" ng-model="message" disabled></textarea>
+                    </div>
+                    <div class="input-group custom-control">
+                        <label>Level</label>
+                        <input type="text" class="form-control" ng-model="level" disabled>
+                    </div>
+                    <div class="input-group custom-control">
+                        <label>Date created</label>
+                        <input type="text" class="form-control" ng-model="datecreated" disabled>
+                    </div>
+                    <div class="input-group custom-control">
+                        <label>Date Modified</label>
+                        <input type="text" class="form-control" ng-model="datemodified" disabled>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

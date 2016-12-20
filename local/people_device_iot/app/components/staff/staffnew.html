@@ -1,0 +1,138 @@
+<div id="breadcrumb">
+    <div class="container">
+        <ol class="breadcrumb">
+            <li><a ui-sref="home.profile">Add new staff</a></li>
+        </ol>
+    </div>
+</div>
+<div class="container profile">
+    <div class="row">
+        <div class="col-sm-6 col-left">
+            <div class="row">
+                <h2>Basic information</h2>
+            </div>
+            <div class="row" data-ng-init="getStaffInfo()">
+                <div class="col-sm-5 avatar">
+                    <img class="img-responsive" ng-show="myForm.file.$valid" ngf-thumbnail="picFile">
+                    <div class="btn-option-create">
+                        <button class="btn btn-default" ng-click="picFile = null" ng-show="picFile">Remove</button>
+                    </div>
+                    <img ng-src="assets/img/no-image.jpg" width="100%" ng-show="picFile===undefined">
+                    <div class="input-group custom-control">
+                        <br>
+                        <input class="input-image form-control" type="file" ngf-select ng-model="picFile" name="file" accept="image/*" ngf-max-size="2MB" required ngf-model-invalid="errorFile">
+                    </div>
+                </div>
+                <div class="col-sm-7 no-padding">
+                    <div class="input-group custom-control">
+                        <label>Title</label>
+                        <select class="form-control" ng-model="title">
+                            <option>Ms</option>
+                            <option>Mr</option>
+                        </select>
+                    </div>
+                    <div class="alert alert-success" ng-show="usernameExits">
+                        <strong>Alert!</strong> Username is early exist
+                    </div>
+                    <div class="alert alert-success" ng-show="errFill">
+                        <strong>Alert!</strong> Please input username
+                    </div>
+                    <div class="input-group custom-control">
+                        <label>Username</label>
+                        <input type="text" required class="form-control" value="{{staff.username}}" ng-model="username">
+                    </div>
+                    <div class="input-group custom-control">
+                        <label>First name</label>
+                        <input type="text" class="form-control" value="{{staff.firstname}}" ng-model="firstname">
+                    </div>
+                    <div class="input-group custom-control">
+                        <label>Last name</label>
+                        <input type="text" class="form-control" value="{{staff.lastname}}" ng-model="lastname">
+                    </div>
+                    <div class="input-group custom-control">
+                        <label>Email</label>
+                        <input type="text" class="form-control" value="{{staff.email}}" ng-model="email">
+                    </div>
+                    <div class="input-group custom-control">
+                        <label>Phone Number</label>
+                        <input type="text" class="form-control" ng-model="phonenumber">
+                    </div>
+                    <div class="input-group custom-control">
+                        <label>Gender</label>
+                        <select class="form-control" ng-model="gender">
+                            <option value="1">Male</option>
+                            <option value="0">Female</option>
+                        </select>
+                    </div>
+                    <div class="alert alert-success" ng-show="errMessage">
+                        <strong>Alert!</strong> Can not add a new staff
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <h2>Working</h2>
+            </div>
+            <div class="row">
+                <div class="input-group custom-control">
+                    <label>Company</label>
+                    <input type="text" class="form-control" value="{{staff.company}}" ng-model="company">
+                </div>
+                <div class="input-group custom-control">
+                    <label>Experence</label>
+                    <input type="text" class="form-control" value="{{staff.experience}}" ng-model="experience">
+                </div>
+                <div class="input-group custom-control">
+                    <label>Participating teams</label>
+                    <input type="text" class="form-control" value="{{staff.position}}" ng-model="position">
+                </div>
+                <div class="input-group custom-control">
+                    <label>Department</label>
+                    <select class="form-control" ng-model="department">
+                        <option>R&D</option>
+                        <option>S&D</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-right">
+            <div class="row">
+                <h2>Health</h2>
+            </div>
+            <div class="row">
+                <div class="input-group custom-control">
+                    <label>Blood type</label>
+                    <input type="text" class="form-control" value="{{staff.bloodtype}}" ng-model="bloodtype">
+                </div>
+                <div class="input-group custom-control">
+                    <label>Diet</label>
+                    <input type="text" class="form-control" value="{{staff.diet}}" ng-model="diet">
+                </div>
+                <div class="input-group custom-control">
+                    <label>Adicted</label>
+                    <input type="text" class="form-control" value="{{staff.adicted}}" ng-model="adicted">
+                </div>
+                <div class="input-group custom-control">
+                    <label>Drug</label>
+                    <input type="text" class="form-control" value="{{staff.drug}}" ng-model="drug">
+                </div>
+                <div class="input-group custom-control">
+                    <label>Metal emotion health</label>
+                    <input type="text" class="form-control" value="{{staff.metalemotionhealth}}" ng-model="metalemotionhealth">
+                </div>
+            </div>
+            <div class="row">
+                <h2>Training</h2>
+            </div>
+            <div class="row">
+                <div class="input-group custom-control">
+                    <textarea rows="5" type="text" class="form-control" ng-model="training"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 text-center">
+            <input class="btn btn-default btn-edit" ng-click="clickBtnSaveBasicInfo(picFile)" type="button" value="Save">
+        </div>
+    </div>
+</div>

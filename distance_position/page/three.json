@@ -1,0 +1,109 @@
+{
+  "head": "dataio running data",
+  "host": "172.16.0.108",
+  "port": 15747,
+  "shift": 600,
+  "creation": "initialisation",
+  "serie": "sampling",
+  "live": "continuous",
+  "radar": "radar",
+  "bridge": [
+    {
+      "input": "sampling",
+      "output": "statistics",
+      "reply": "shown"
+    },
+    {
+      "input": "continuous",
+      "output": "realtime"
+    },
+    {
+      "input": "radar",
+      "output": "onmap"
+    }
+  ],
+  "observation": [
+    {
+      "key": "interval",
+      "title": "Intervals of retrieving",
+      "type": "number",
+      "unit": "second"
+    },
+    {
+      "key": "rssi",
+      "alias": [
+        "weighted"
+      ],
+      "title": "RSSI values",
+      "type": "number",
+      "unit": "dbm"
+    },
+    {
+      "key": "filtered",
+      "alias": [
+        "smoothed"
+      ],
+      "title": "Filtered RSSI",
+      "type": "number",
+      "unit": "dbm"
+    },
+    {
+      "key": "distance",
+      "alias": [
+        "rocky_farness"
+      ],
+      "title": "Rough distances",
+      "type": "number",
+      "unit": "metre"
+    },
+    {
+      "key": "farness",
+      "alias": [
+        "smooth_farness"
+      ],
+      "title": "Calculated & little fixed",
+      "type": "number",
+      "unit": "metre"
+    },
+    {
+      "key": "bounce",
+      "title": "Found-out after some time",
+      "type": "number",
+      "unt": "metre"
+    },
+    {
+      "key": "lqi",
+      "alias": [
+        "quality"
+      ],
+      "title": "LQI stream",
+      "type": "number"
+    },
+    {
+      "key": "time",
+      "title": "Clock at each retrieval",
+      "type": "datetime"
+    },
+    {
+      "key": "raw",
+      "title": "Raw retrieved data",
+      "type": "string"
+    },
+    {
+      "key": "power",
+      "title": "RX power within circuit",
+      "type": "number",
+      "unit": "mw"
+    }
+  ],
+  "concurrent": [
+    {
+      "key": "rssi filtered weighted smoothed",
+      "title": "Collected & filtered RSSI values"
+    },
+    {
+      "key": "distance farness rocky_farness smooth_farness bounce",
+      "title": "Calculated distances"
+    }
+  ]
+}

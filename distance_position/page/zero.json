@@ -1,0 +1,72 @@
+{
+  "head": "constant-liked data",
+  "state": {
+    "local": "local",
+    "development": "development",
+    "dev": "development"
+  },
+  "variation": {
+    "wheelr": "start",
+    "timesave": 3,
+    "filter": true,
+    "process": 0.45,
+    "measure": 11.42,
+    "d0": 1,
+    "dx": 4,
+    "height": 1,
+    "count": 30
+  },
+  "channel": {
+    "texting": "textdata",
+    "textreply": "textdata/reply",
+    "backstream": "backstream",
+    "roughdata": "borderbasket/rough",
+    "borderbasket": "borderbasket",
+    "calibre": "calibrating",
+    "posimap": "positions",
+    "sonar": "radarmap",
+    "rxmodel": "mdpattern",
+    "batmon": "batteries"
+  },
+  "onerun": [
+    "unit/tcpin",
+    "unit/setup",
+    "unit/tagmsg",
+    "positioning/index"
+  ],
+  "border": {
+    "timeout": 1200,
+    "host": "172.16.0.126",
+    "port": 4901
+  },
+  "broker": {
+    "local": {
+      "host": "172.16.0.72",
+      "port": 1883,
+      "username": "admin",
+      "password": "admin"
+    },
+    "development": {
+      "host": "172.16.0.69",
+      "port": 1883,
+      "username": "admin",
+      "password": "admin"
+    }
+  },
+  "database": {
+    "local": {
+      "host": "172.16.0.68",
+      "port": 3306,
+      "user": "dev",
+      "password": "dev123",
+      "database": "people_device_iot"
+    },
+    "development": {
+      "host": "172.16.0.68",
+      "port": 3306,
+      "user": "dev",
+      "password": "dev123",
+      "database": "people_device_iot"
+    }
+  }
+}

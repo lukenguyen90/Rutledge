@@ -1,0 +1,35 @@
+<div id="breadcrumb">
+    <div class="container">
+        <ol class="breadcrumb">
+            <li><a ui-sref="home.profile">Send message</a></li>
+        </ol>
+    </div>
+</div>
+<div class="container profile">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="col-sm-6 pull-left">
+                <div class="row">
+                    <h2>Send message</h2>
+                </div>
+                <div class="row" >
+                    <div class="input-group custom-control">
+                        <label>Staff</label>
+                        <select class="form-control" ng-model="chipid">
+                        <option value="0">All</option>
+                        <option value="{{staff.chipid}}" ng-repeat="staff in list_staff">{{staff.firstname + ' ' + staff.lastname }}</option>
+                    </select>
+                    </div>
+                    <div class="input-group custom-control">
+                        <label>Message</label>
+                        <input type="text" class="form-control" ng-model="message">
+                    </div>
+                    
+                    <div class="pull-right">
+                        <input class="btn btn-default btn-edit" ng-click="sendMessage()" type="button" value="Send">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

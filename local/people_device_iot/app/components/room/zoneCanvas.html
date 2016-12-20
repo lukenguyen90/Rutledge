@@ -1,0 +1,412 @@
+<html>
+
+<head>
+    <style>
+    body {
+        padding: 0;
+        margin: 0;
+    }
+    </style>
+    <script type="text/javascript" src="/assets/js/p5/p5.min.js"></script>
+    <!-- <script type="text/javascript" src="/assets/js/p5/sketch.js"></script> -->
+    <!-- <script type="text/javascript" src="/assets/js/p5/p5.dom.js"></script> -->
+    <script type="text/javascript" src="/assets/js/p5/jquery-3.1.0.min.js"></script>
+    <script type="text/javascript">
+    // viewport
+    var viewportwidth;
+    var viewportheight;
+    // the more standards compliant browsers (mozilla/netscape/opera/IE7) use window.innerWidth and window.innerHeight
+    if (typeof window.innerWidth != 'undefined') {
+        viewportwidth = window.innerWidth,
+            viewportheight = window.innerHeight
+    }
+    // IE6 in standards compliant mode (i.e. with a valid doctype as the first line in the document)
+    else if (typeof document.documentElement != 'undefined' &&
+        typeof document.documentElement.clientWidth != 'undefined' &&
+        document.documentElement.clientWidth != 0) {
+        viewportwidth = document.documentElement.clientWidth,
+            viewportheight = document.documentElement.clientHeight
+    } else { // older versions of IE
+        viewportwidth = document.getElementsByTagName('body')[0].clientWidth,
+            viewportheight = document.getElementsByTagName('body')[0].clientHeight
+    }
+
+    // startsetup default variables
+    var data = {
+        zone: undefined,
+        device: {
+            list: {},
+            selected_id: ''
+        }
+    }
+
+    var nodes = [];
+    var isFinish = false;
+    var node_size = 10;
+
+    var display = {
+            main: {
+                width: viewportwidth,
+                height: viewportheight
+            },
+            zone: {
+                img: undefined,
+                width: 0,
+                height: 0,
+                grid: {
+                    default: 50,
+                    size: 50,
+                    width: 0,
+                    height: 0,
+                    text_size: 10
+                },
+                mouse: {
+                    col: 0,
+                    row: 0,
+                    hover: false
+                },
+                device: {
+                    default: 20,
+                    size: 20
+                },
+                isInside: false
+            },
+            info: {
+                width: viewportwidth,
+                height: 200
+            },
+            text: {
+                size: 20
+            },
+            padding: 20
+        }
+        // end setup default variables
+    var current;
+    var previous;
+    // P5 functions
+
+    function setup() {
+        createCanvas(display.main.width, display.main.height);
+        current = new p5.Vector(0, 0);
+        previous = new p5.Vector(0, 0);
+    }
+    // Drawing functions
+    function draw() {
+        background(255);
+        if (typeof(data.zone) != 'undefined') {
+            draw_zone();
+            draw_device();
+            if (nodes.length != 0) {
+                draw_node();
+                connect_node();
+            }
+        }
+        // if(typeof(img) != 'undefined'){
+        //      image(img, 0, 0, display_width, display_height);
+        // }
+        // draw mouse position
+        // if (isInside) {
+        //     draw_mouse_position();
+        // }
+        // draw_grid();
+        draw_info();
+    }
+    // draw zone view
+    function draw_zone() {
+        draw_zone_background()
+        draw_grid();
+    }
+
+    function draw_zone_background() {
+        stroke(240);
+        fill(245);
+        rect(display.padding - 1, display.padding - 1, display.zone.width + 1, display.zone.height + 1);
+        if (typeof(display.zone.img) != 'undefined') {
+            image(display.zone.img, display.padding, display.padding, display.zone.width, display.zone.height);
+        }
+    }
+    // Create grid view 
+    function draw_grid() {
+        textSize(display.zone.grid.text_size);
+        stroke(153);
+        fill(153);
+        var tp = {
+            'x': -display.zone.grid.text_size / 2,
+            'y': display.zone.grid.text_size * 1.5
+        }
+        for (var i = 0; i <= data.zone.width; i++) {
+            p1 = i * display.zone.grid.size;
+            p2 = 0;
+            p3 = i * display.zone.grid.size;
+            p4 = display.zone.height;
+            line(p1 + display.padding, p2 + display.padding, p3 + display.padding, p4 + display.padding);
+            text(i, p1 + display.padding - (display.zone.grid.text_size / (i > 9 ? 2 : 4)), p2 + display.padding);
+        };
+        for (var j = 0; j <= data.zone.height; j++) {
+            p1 = 0;
+            p2 = j * display.zone.grid.size;
+            p3 = display.zone.width;
+            p4 = j * display.zone.grid.size;
+            line(p1 + display.padding, p2 + display.padding, p3 + display.padding, p4 + display.padding);
+            if (j > 0)
+                text(j, p1 + display.padding - display.zone.grid.text_size, p2 + display.padding);
+        };
+    }
+
+    function draw_device() {
+        var default_space = display.padding + (display.zone.grid.size - display.zone.device.size) / 2;
+        Object.keys(data.device.list).map(function(mk) {
+            var d = data.device.list[mk];
+            // if (d.isDeploy == 1) {
+            switch (d.type.toLowerCase()) {
+                case 'server':
+                    fill(21, 114, 153);
+                    var p1 = d.col * display.zone.grid.size + default_space;
+                    var p2 = d.row * display.zone.grid.size + default_space;
+                    rect(p1, p2, display.zone.device.size, display.zone.device.size);
+                    break;
+                case 'relay':
+                    fill(21, 114, 153);
+                    var x1 = d.col * display.zone.grid.size + default_space + display.zone.device.size / 2;
+                    var y1 = d.row * display.zone.grid.size + default_space;
+                    var x2 = d.col * display.zone.grid.size + default_space;
+                    var y2 = d.row * display.zone.grid.size + default_space + display.zone.device.size;
+                    var x3 = d.col * display.zone.grid.size + default_space + display.zone.device.size;
+                    var y3 = d.row * display.zone.grid.size + default_space + display.zone.device.size;
+                    triangle(x1, y1, x2, y2, x3, y3);
+                    break;
+            }
+            // }
+        });
+    }
+
+    function draw_info() {
+        var line_space = 20;
+        fill(153);
+        var start_width = display.padding;
+        var start_height = display.zone.height + display.padding + line_space;
+
+        var zone_name = typeof(data.zone) == 'undefined' ? 'undefined' : data.zone.name.toString();
+        text('Zone: ' + zone_name, start_width, start_height + line_space);
+    }
+
+    // event functions
+    function mouseMoved() {
+        if (mouseX >= display.padding && mouseX <= (display.zone.width + display.padding) && mouseY >= display.padding && mouseY <= (display.zone.height + display.padding)) {
+            display.zone.mouse.col = parseInt((mouseX - display.padding) / display.zone.grid.size);
+            display.zone.mouse.row = parseInt((mouseY - display.padding) / display.zone.grid.size);
+            display.zone.mouse.hover = true;
+        } else {
+            display.zone.mouse.col = 0;
+            display.zone.mouse.row = 0;
+            display.zone.mouse.hover = false;
+        }
+    }
+
+    function draw_node() {
+        var oldNode = undefined;
+        nodes.map(function(d) {
+            fill(21, 114, 153);
+            var x1 = d.col * display.zone.grid.size + display.padding + (display.zone.grid.size) / 2;
+            var y1 = d.row * display.zone.grid.size + display.padding + (display.zone.grid.size) / 2;
+            ellipse(x1, y1, node_size, node_size);
+            connect_node(oldNode, d);
+            oldNode = d;
+        })
+    }
+
+    function connect_node(node1, node2) {
+        if (typeof(node1) != 'undefined') {
+            var x1 = node1.col * display.zone.grid.size + display.padding + display.zone.grid.size / 2;
+            var y1 = node1.row * display.zone.grid.size + display.padding + display.zone.grid.size / 2;
+            var x2 = node2.col * display.zone.grid.size + display.padding + display.zone.grid.size / 2;
+            var y2 = node2.row * display.zone.grid.size + display.padding + display.zone.grid.size / 2;
+            // current = createVector(x1, y1);
+            // previous = createVector(x2, y2);
+            //line(x1, y1, x2, y2);
+            rect(x1,y1,x2,y2);
+        }
+    }
+
+    function mousePressed() {
+        if (display.zone.mouse.hover) {
+            display.zone.mouse.col = parseInt((mouseX - display.padding) / display.zone.grid.size);
+            display.zone.mouse.row = parseInt((mouseY - display.padding) / display.zone.grid.size);
+            var Node = {
+                "col": display.zone.mouse.col,
+                "row": display.zone.mouse.row
+            }
+            nodes.push(Node);
+        }
+        // if (device_selected_id !== '') {
+        //     var col = parseInt(mouseX / grid_width);
+        //     var row = parseInt(mouseY / grid_height);
+        //     if (typeof(device_list[device_selected_id]) != 'undefined') {
+        //         device_list[device_selected_id].col = col;
+        //         device_list[device_selected_id].row = row;
+        //         device_list[device_selected_id].isDeploy = 1;
+        //         // window.parent.setDeployed(device_list[device_selected_id]);
+        //     }
+        // }
+    }
+
+    function changeLocation() {
+        nodes = [];
+    }
+
+    function removeSelectDevice() {
+        if (device_selected_id !== '') {
+            console.log(device_selected_id);
+            if (typeof(device_list[device_selected_id]) != 'undefined') {
+                device_list[device_selected_id].isDeploy = 0;
+                return true;
+            }
+        }
+        return false;
+    }
+    // Stop
+    // function mouseReleased() {
+    //     current_position = {
+    //           'col'         : 0
+    //         , 'row'         : 0
+    //         , 'isInside'    : false
+    //     }
+    // }
+
+    // setting functions
+    function setZoneInfo(oZone) {
+        data.zone = oZone;
+        zoom_number = 0;
+        display.zone.grid.size = display.zone.grid.default;
+        display.zone.device.size = display.zone.device.default;
+        if (typeof(data.zone) == 'undefined') {
+            display.zone.width = 0;
+            display.zone.height = 0;
+        } else {
+            display.zone.img = undefined;
+            if (data.zone.zoneimage) {
+                display.zone.img = loadImage(data.zone.zoneimage);
+            }
+            display.zone.width = data.zone.width * display.zone.grid.default;
+            display.zone.height = data.zone.height * display.zone.grid.default;
+        }
+        calCanvasSize();
+    }
+
+    function activeMousePosition(isMouseEnter) {
+        isInside = isMouseEnter;
+    }
+
+    function setSelectedDevice(deviceid) {
+        device_selected_id = deviceid;
+    }
+
+    function setDevice(devices) {
+        data.device.list = {};
+        devices.map(function(d) {
+            var coordinates = [0, 0];
+            if (d.coordinates != null) {
+                coordinates = d.coordinates.split(",");
+            }
+
+            newDevice = {
+                'id': d.deviceid,
+                'col': parseInt(coordinates[0]),
+                'row': parseInt(coordinates[1]),
+                'coordinates': d.coordinates,
+                'type': d.type,
+                'name': d.name,
+                'isDeploy': d.isdeploy
+            };
+            data.device.list[d.deviceid] = newDevice;
+        });
+    }
+
+    function resetSizeCanvas(zoom_plus) {
+        if (!(zoom_plus == -1 && zoom_number == -9)) {
+            zoom_number += zoom_plus;
+            display.zone.grid.size = display.zone.grid.default+(display.zone.grid.default * (zoom_number * 0.1));
+            display.zone.device.size = display.zone.device.default+zoom_number;
+            display.zone.width = data.zone.width * display.zone.grid.size;
+            display.zone.height = data.zone.height * display.zone.grid.size;
+            calCanvasSize();
+            // display_width = img.width + (img.width * (zoom_number * 0.1));
+            // display_height = img.height + (img.height * (zoom_number * 0.1));
+            // resetGrid();
+            // resetDeviceSize();
+        }
+    }
+
+    function calCanvasSize() {
+        display.main.width = display.zone.width + 2 * display.padding;
+        display.main.height = display.zone.height + display.info.height + 2 * display.padding;
+        if (display.main.width < viewportwidth) {
+            display.main.width = viewportwidth;
+        }
+        if (display.main.height < viewportheight) {
+            display.main.height = viewportheight;
+        }
+        resizeCanvas(display.main.width, display.main.height);
+    }
+
+    function resetGrid() {
+        grid_width = display_width / zonesize.x;
+        grid_height = display_height / zonesize.y;
+        grid_text_size = 10 + zoom_number;
+    }
+
+    function resetDeviceSize() {
+        device_size = round(grid_width / 3);
+        if (device_size < 5) {
+            device_size = 5;
+        }
+    }
+
+    function clearNode() {
+        nodes = [];
+    }
+
+    function hsbrand() {
+        var r, b, g, s = 0.72,
+            l = 0.5
+        var h = Math.round(Math.random() * 360)
+        var hq = (+h.toFixed(3)) / 60
+        var c = (1 - Math.abs(2 * l - 1)) * s
+        var x = (1 - Math.abs(hq % 2 - 1)) * c
+        var m = l - 0.5 * c
+        var revert = function(x) {
+            return Math.round((x + m) * 255).toString(16)
+        }
+        switch (Math.floor(hq)) {
+            case 6:
+            case 0:
+                r = c, g = x, b = 0;
+                break;
+            case 1:
+                r = x, g = c, b = 0;
+                break;
+            case 2:
+                r = 0, g = c, b = x;
+                break;
+            case 3:
+                r = 0, g = x, b = c;
+                break;
+            case 4:
+                r = x, g = 0, b = c;
+                break;
+            case 5:
+                r = c, g = 0, b = x;
+                break;
+            default:
+                r = 0, g = 0, b = 0;
+                break;
+        }
+        return '#' + revert(r) + revert(g) + revert(b)
+    }
+    </script>
+</head>
+
+<body>
+</body>
+
+</html>

@@ -1,0 +1,117 @@
+<div id="breadcrumb">
+    <div class="container">
+        <ol class="breadcrumb">
+            <li><a ui-sref="home.profile">Edit Profile - {{firstname}} {{lastname}} </a></li>
+        </ol>
+    </div>
+</div>
+<div class="container profile">
+    <div class="row" data-ng-init="getStaffInfo()">
+        <div class="col-sm-6 col-left">
+            <div class="row">
+                <h2>Basic information</h2>
+            </div>
+            <div class="row">
+                <div class="col-sm-5 avatar">
+                    <img class="img-responsive" ng-show="myForm.file.$valid" ngf-thumbnail="picFile">
+                    <img ng-src="assets/img/no-image.jpg" width="100%" ng-show="picFile.length==0">
+                </div>
+                <div class="col-sm-7 no-padding">
+                    <div class="input-group custom-control">
+                        <label>Title</label>
+                        <select class="form-control" ng-model="title" disabled>
+                            <option>Ms</option>
+                            <option>Mr</option>
+                        </select>
+                    </div>
+                    <div class="input-group custom-control">
+                        <label>Username</label>
+                        <input type="text" class="form-control" value="{{staff.username}}" disabled ng-model="username">
+                    </div>
+                    <div class="input-group custom-control">
+                        <label>First name</label>
+                        <input type="text" class="form-control" value="{{staff.firstname}}" ng-model="firstname" disabled>
+                    </div>
+                    <div class="input-group custom-control">
+                        <label>Last name</label>
+                        <input type="text" class="form-control" value="{{staff.lastname}}" ng-model="lastname" disabled>
+                    </div>
+                    <div class="input-group custom-control">
+                        <label>Email</label>
+                        <input type="text" class="form-control" value="{{staff.email}}" ng-model="email" disabled>
+                    </div>
+                    <div class="input-group custom-control">
+                        <label>Phone Number</label>
+                        <input type="text" class="form-control" ng-model="phonenumber" disabled>
+                    </div>
+                    <div class="input-group custom-control">
+                        <label>Gender</label>
+                        <select class="form-control" ng-model="gender" disabled>
+                            <option value="1">Male</option>
+                            <option value="0">Female</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <h2>Working</h2>
+            </div>
+            <div class="row">
+                <div class="input-group custom-control">
+                    <label>Company</label>
+                    <input type="text" class="form-control" value="{{staff.company}}" ng-model="company" disabled>
+                </div>
+                <div class="input-group custom-control">
+                    <label>Experence</label>
+                    <input type="text" class="form-control" value="{{staff.experience}}" ng-model="experience" disabled>
+                </div>
+                <div class="input-group custom-control">
+                    <label>Participating teams</label>
+                    <input type="text" class="form-control" value="{{staff.position}}" ng-model="position" disabled>
+                </div>
+                <div class="input-group custom-control">
+                    <label>Department</label>
+                    <select class="form-control" ng-model="department" disabled>
+                        <option>R&D</option>
+                        <option>S&D</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-right">
+            <div class="row">
+                <h2>Health</h2>
+            </div>
+            <div class="row">
+                <div class="input-group custom-control">
+                    <label>Blood type</label>
+                    <input type="text" class="form-control" value="{{staff.bloodtype}}" ng-model="bloodtype" disabled>
+                </div>
+                <div class="input-group custom-control">
+                    <label>Diet</label>
+                    <input type="text" class="form-control" value="{{staff.diet}}" ng-model="diet" disabled>
+                </div>
+                <div class="input-group custom-control">
+                    <label>Adicted</label>
+                    <input type="text" class="form-control" value="{{staff.adicted}}" ng-model="adicted" disabled>
+                </div>
+                <div class="input-group custom-control">
+                    <label>Drug</label>
+                    <input type="text" class="form-control" value="{{staff.drug}}" ng-model="drug" disabled>
+                </div>
+                <div class="input-group custom-control">
+                    <label>Metal emotion health</label>
+                    <input type="text" class="form-control" value="{{staff.metalemotionhealth}}" ng-model="metalemotionhealth" disabled>
+                </div>
+            </div>
+            <div class="row">
+                <h2>Training</h2>
+            </div>
+            <div class="row">
+                <div class="input-group custom-control">
+                    <p>{{training}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

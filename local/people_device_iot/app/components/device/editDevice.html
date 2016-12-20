@@ -1,0 +1,79 @@
+<style type="text/css">
+.inputradio {
+    margin-left: 30px;
+}
+</style>
+<div id="breadcrumb">
+    <div class="container">
+        <ol class="breadcrumb">
+            <li><a href="../#/device/detail/{{deviceInfo.id}}">{{deviceInfo.name}}</a></li>
+        </ol>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <img class="img-responsive" ng-show="myForm.file.$valid" ngf-thumbnail="picFile">
+            <div class="btn-option-create">
+                <button class="btn btn-default" ng-click="picFile = null" ng-show="picFile">Remove</button>
+            </div>
+            <img ng-src="assets/img/no-image.jpg" width="100%" ng-show="picFile===undefined">
+            <div class="input-group custom-control">
+                <br>
+                <input class="input-image form-control" type="file" ngf-select ng-model="picFile" name="file" accept="image/*" ngf-max-size="2MB" required ngf-model-invalid="errorFile">
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div class="alert alert-success" ng-show="errMessage">
+                <strong>Alert!</strong> Can not update device
+            </div>
+            <div class="input-group custom-control">
+                <label>Chip ID</label>
+                <input type="text" class="form-control" ng-model="chipid">
+            </div>
+            <div class="input-group custom-control">
+                <label>Name</label>
+                <input type="text" class="form-control" ng-model="name">
+            </div>
+            <div class="input-group custom-control">
+                <label>Description</label>
+                <textarea type="text" class="form-control" ng-model="description"></textarea>
+            </div>
+            <div class="input-group custom-control">
+                <label>Type</label>
+                <select class="form-control" ng-model="type">
+                    <option value="{{typeDevice.id}}" ng-repeat="typeDevice in listTypeDevice">{{typeDevice.name}}</option>
+                </select>
+            </div>
+            <div class="input-group custom-control">
+                <label>IPv6</label>
+                <input type="text" class="form-control" ng-model="ipv6">
+            </div>
+            <!-- <div class="input-group custom-control">
+                <label>Coordinates</label>
+                <input type="text" class="form-control" ng-model="coordinates">
+            </div> -->
+            <div class="input-group custom-control">
+                <label>Expired date</label>
+                <a class="dropdown-toggle" id="dropdown-datepicker" role="button" data-toggle="dropdown" data-target="#">
+                    <div class="input-group custom-control">
+                        <input type="text" class="form-control date-picker" data-ng-model="expireddates">
+                    </div>
+                </a>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                    <datetimepicker data-ng-model="expireddates" data-datetimepicker-config="{ dropdownSelector: '#dropdown-datepicker',startView:'day', minView:'day',modelType: 'MM/DD/YYYY'}" />
+                </ul>
+            </div>
+            <div class="input-group custom-control">
+                <label>Is Active</label>
+                <div>
+                    <input type="radio" value="1" ng-model="status">&nbsp; Active</label>
+                    <input type="radio" value="0" ng-model="status">&nbsp; Inactive</label>
+                </div>
+            </div>
+            <div class="btn-option-create">
+                <button type="button" class="btn btn-custom" ng-click="editDevice(picFile)">Save</button>
+            </div>
+        </div>
+    </div>
+</div>

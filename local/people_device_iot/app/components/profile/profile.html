@@ -1,0 +1,133 @@
+<div id="breadcrumb">
+    <div class="container">
+        <ol class="breadcrumb">
+            <li><a ui-sref="home.profile">My profile</a></li>
+        </ol>
+    </div>
+</div>
+<div class="container profile">
+    <div class="row">
+        <div class="col-sm-6 col-left">
+            <div class="row">
+                <h2>Basic information</h2>
+            </div>
+            <div class="row" data-ng-init="getStaffInfo()">
+                <div class="col-sm-5 avatar">
+                    <img class="img-responsive" ng-show="myForm.file.$valid" ngf-thumbnail="picFile">
+                    <div class="btn-option-create" ng-show="isShowChooseFile">
+                        <button class="btn btn-default" ng-click="picFile = null" ng-show="picFile">Remove</button>
+                    </div>
+                    <img ng-src="assets/img/no-image.jpg" width="100%" ng-show="picFile===undefined">
+                    <div class="input-group custom-control" ng-show="isShowChooseFile">
+                        <br>
+                        <input class="input-image form-control" type="file" ngf-select ng-model="picFile" name="file" accept="image/*" ngf-max-size="2MB" required ngf-model-invalid="errorFile">
+                    </div>
+       
+                </div>
+                <div class="col-sm-7 no-padding">
+                    <div class="input-group custom-control">
+                        <label>Title</label>
+                        <select class="form-control" ng-disabled="disableInformationBasic" ng-init="disableInformationBasic=true" ng-model="title">
+                            <option>Ms</option>
+                            <option>Mr</option>
+                        </select>
+                    </div>
+                    <div class="input-group custom-control">
+                        <label>Username</label>
+                        <input type="text" class="form-control" value="{{loggedUser.username}}" disabled>
+                    </div>
+                    <div class="input-group custom-control">
+                        <label>First name</label>
+                        <input type="text" class="form-control" value="{{staff.firstname}}" ng-disabled="disableInformationBasic" ng-init="disableInformationBasic=true" ng-model="firstname">
+                    </div>
+                    <div class="input-group custom-control">
+                        <label>Last name</label>
+                        <input type="text" class="form-control" value="{{staff.lastname}}" ng-disabled="disableInformationBasic" ng-init="disableInformationBasic=true" ng-model="lastname">
+                    </div>
+                    <div class="input-group custom-control">
+                        <label>Email</label>
+                        <input type="text" class="form-control" value="{{staff.email}}" ng-disabled="disableInformationBasic" ng-init="disableInformationBasic=true" ng-model="email">
+                    </div>
+                    <div class="input-group custom-control">
+                        <label>Phone Number</label>
+                        <input type="text" class="form-control" ng-disabled="disableInformationBasic" ng-init="disableInformationBasic=true" ng-model="phonenumber">
+                    </div>
+                    <div class="input-group custom-control">
+                        <label>Gender</label>
+                        <select class="form-control" ng-model="gender" ng-disabled="disableInformationBasic" ng-init="disableInformation=true">
+                            <option value="1">Male</option>
+                            <option value="0">Female</option>
+                        </select>
+                    </div>
+                    <div class="pull-right">
+                        <input class="btn btn-default btn-edit" ng-click="clickBtnEditBasicInfo()" type="button" value="Edit" ng-show="isShowBtnEditBasic">
+                        <input class="btn btn-default btn-edit" ng-click="updateStaffBasicInfo(picFile)" type="button" value="Save" ng-show="isShowBtnSaveBasic">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <h2>Working</h2>
+            </div>
+            <div class="row">
+                <div class="input-group custom-control">
+                    <label>Experence</label>
+                    <input type="text" class="form-control" value="{{staff.experience}}" ng-model="experience" ng-disabled="disableInformationWorking" ng-init="disableInformationWorking=true">
+                </div>
+                <div class="input-group custom-control">
+                    <label>Participating teams</label>
+                    <input type="text" class="form-control" value="{{staff.position}}" ng-model="position" ng-disabled="disableInformationWorking" ng-init="disableInformationWorking=true">
+                </div>
+                <div class="input-group custom-control">
+                    <label>Department</label>
+                    <select class="form-control" ng-model="department" ng-disabled="disableInformationWorking" ng-init="disableInformationWorking=true">
+                    	<option>R&D</option>
+                        <option>S&D</option>
+                    </select>
+                </div>
+                <div class="pull-right">
+                    <input class="btn btn-default btn-edit" ng-click="clickBtnEditWorkingInfo()" type="button" value="Edit" ng-show="isShowBtnEditWorking">
+                    <input class="btn btn-default btn-edit" ng-click="updateStaffWorkingInfo()" type="button" value="Save" ng-show="isShowBtnSaveWorking">
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-right">
+            <div class="row">
+                <h2>Health</h2>
+            </div>
+            <div class="row">
+                <div class="input-group custom-control">
+                    <label>Blood type</label>
+                    <input type="text" class="form-control" value="{{staff.bloodtype}}" ng-model="bloodtype" ng-disabled="disableInformationHealth" ng-init="disableInformationHealth=true">
+                </div>
+                <div class="input-group custom-control">
+                    <label>Diet</label>
+                    <input type="text" class="form-control" value="{{staff.diet}}" ng-model="diet" ng-disabled="disableInformationHealth" ng-init="disableInformationHealth=true">
+                </div>
+                <div class="input-group custom-control">
+                    <label>Adicted</label>
+                    <input type="text" class="form-control" value="{{staff.adicted}}" ng-model="adicted" ng-disabled="disableInformationHealth" ng-init="disableInformationHealth=true">
+                </div>
+                <div class="input-group custom-control">
+                    <label>Drug</label>
+                    <input type="text" class="form-control" value="{{staff.drug}}" ng-model="drug" ng-disabled="disableInformationHealth" ng-init="disableInformationHealth=true">
+                </div>
+                <div class="input-group custom-control">
+                    <label>Metal emotion health</label>
+                    <input type="text" class="form-control" value="{{staff.metalemotionhealth}}" ng-model="metalemotionhealth" ng-disabled="disableInformationHealth" ng-init="disableInformationHealth=true">
+                </div>
+                <div class="pull-right">
+                    <input class="btn btn-default btn-edit" ng-click="clickBtnEditHealthInfo()" type="button" value="Edit" ng-show="isShowBtnEditHealth">
+                    <input class="btn btn-default btn-edit" ng-click="updateStaffHealthInfo()" type="button" value="Save" ng-show="isShowBtnSaveHealth">
+                </div>
+            </div>
+            <div class="row">
+                <h2>Training</h2>
+            </div>
+            <div class="row">
+                <div class="input-group custom-control">
+                    <p>{{training}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

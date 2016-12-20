@@ -1,0 +1,167 @@
+<div id="breadcrumb">
+    <div class="container">
+        <ol class="breadcrumb">
+            <li><a ui-sref="home.peopleiot">People IOT Locator</a></li>
+        </ol>
+    </div>
+</div>
+<div class="container">
+    <div class="row" style="display: none;">
+        <div class="col-md-12">
+            <div class="action-box">
+                <div class="select-box">
+                    <select class="form-control" ng-model="zoneId" ng-change="selectZone(zoneId)">
+                        <option value="{{zone.id}}" ng-repeat="zone in list_zone">{{zone.name}}</option>
+                    </select>
+                </div>
+                <div class="select-box">
+                    <select class="form-control" ng-model="locationId" ng-change="selectZoneByLocation(locationId)">
+                        <option value="{{location.id}}" ng-repeat="location in list_location">{{location.name}}</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="clear-bottom"></div>
+    <div class="row">
+        <div class="col-md-7">
+            <iframe src="/app/components/demo/demoCanvas.html" ng-mouseenter="hoverInCanvas()" ng-mouseleave="outCanvas()" id="canvas_iframe" width="100%" height="690px" style="display:block;"></iframe>
+            <button class="btn btn-default btn-zoom" ng-click="zoomOut()" type="button" name="zoomOut" value="Zoom Out" style="width:120px">Zoom Out</button>
+            <button class="btn btn-default btn-zoom" ng-click="zoomIn()" type="button" name="zoomIn" value="Zoom In" style="width:120px">Zoom In</button>
+        </div>
+        <div class="col-md-2">
+            <div class="domo-custom-control">
+                <label>Total POB</label>
+                <input type="text" readonly="readonly" class="demo-text" id="totalpob">
+            </div>
+            <div class="domo-custom-control" style="display: none;" >
+                <label>Total in Zones</label>
+                <input type="text" readonly="readonly" class="demo-text" id="totalinzone">
+            </div>
+            <div class="domo-custom-control">
+                <label>Red Zone</label>
+                <input type="text" readonly="readonly" class=" demo-text" id="redzone">
+            </div>
+            <div class="domo-custom-control" style="display: none;">
+                <label>Neutral Zone</label>
+                <input type="text" readonly="readonly" class=" demo-text" id="neutralzone">
+            </div>
+            <div class="domo-custom-control" style="display: none;">
+                <label>Muster</label>
+                <input type="text" readonly="readonly" class="demo-text-gray" id="musterzone">
+            </div>
+            <div class="domo-custom-control">
+                <label style="color: red">Missing</label>
+                <input type="text" readonly="readonly" class="demo-text-red" id="missing">
+            </div>
+        </div>
+        <div class="col-md-4">
+            <table class="table-hiden" id="table-header">
+                <tr>
+                    <td><b>Name</b></td>
+                    <td><b>Company</b></td>
+                    <td><b>Scope</b></td>
+                </tr>
+            </table>
+            <table class="table-hiden" id="table-item">
+                <tr>
+                    <td>
+                        <a href="#" target="_blank">NAME</a>
+                    </td>
+                    <td>COMPANY</td>
+                    <td>SCOPE</td>
+                </tr>
+            </table>
+            <div style="margin-top: 20px;">
+                <table id="table-pob" class="table table-striped table-bordered ng-isolate-scope dataTable no-footer table-hiden">
+                </table>
+                <table id="table-totalinzone" class="table table-striped table-bordered ng-isolate-scope dataTable no-footer table-hiden">
+                </table>
+                <table id="table-redzone" class="table table-striped table-bordered ng-isolate-scope dataTable no-footer table-hiden">
+                </table>
+                <table id="table-neutralzone" class="table table-striped table-bordered ng-isolate-scope dataTable no-footer table-hiden">
+                </table>
+                <table id="table-musterzone" class="table table-striped table-bordered ng-isolate-scope dataTable no-footer table-hiden">
+                </table>
+                <table id="table-missing" class="table table-striped table-bordered ng-isolate-scope dataTable no-footer table-hiden">
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="row" id="content">
+    </div>
+    <div class="clear-bottom"></div>
+</div>
+<script type="text/javascript">
+$("#totalpob").click(function() {
+    $("#table-pob").toggle();
+    if ($('#table-pob').css('display') == 'none') {
+        $("#totalpob").css("background-color", "#fff");
+    } else {
+        $("#totalpob").css("background-color", "#157399");
+    }
+    $("#redzone, #totalinzone, #neutralzone").css("background-color", "#fff");
+    $("#musterzone").css("background-color", "gray");
+    $("#missing").css("background-color", "red");
+    $("#table-totalinzone, #table-redzone, #table-neutralzone, #table-musterzone, #table-missing").css("display", "none");
+});
+$("#totalinzone").click(function() {
+    $("#table-totalinzone").toggle();
+    if ($('#table-totalinzone').css('display') == 'none') {
+        $("#totalinzone").css("background-color", "#fff");
+    } else {
+        $("#totalinzone").css("background-color", "#157399");
+    }
+    $("#redzone, #totalpob, #neutralzone").css("background-color", "#fff");
+    $("#musterzone").css("background-color", "gray");
+    $("#missing").css("background-color", "red");
+    $("#table-pob, #table-redzone, #table-neutralzone, #table-musterzone, #table-missing").css("display", "none");
+});
+$("#redzone").click(function() {
+    $("#table-redzone").toggle();
+    if ($('#table-redzone').css('display') == 'none') {
+        $("#redzone").css("background-color", "#fff");
+    } else {
+        $("#redzone").css("background-color", "#157399");
+    }
+    $("#totalinzone, #totalpob, #neutralzone").css("background-color", "#fff");
+    $("#musterzone").css("background-color", "gray");
+    $("#missing").css("background-color", "red");
+    $("#table-pob, #table-totalinzone, #table-neutralzone, #table-musterzone, #table-missing").css("display", "none");
+});
+$("#neutralzone").click(function() {
+    $("#table-neutralzone").toggle();
+    if ($('#table-neutralzone').css('display') == 'none') {
+        $("#neutralzone").css("background-color", "#fff");
+    } else {
+        $("#neutralzone").css("background-color", "#157399");
+    }
+    $("#totalinzone, #totalpob, #redzone").css("background-color", "#fff");
+    $("#musterzone").css("background-color", "gray");
+    $("#missing").css("background-color", "red");
+    $("#table-pob, #table-totalinzone, #table-redzone, #table-musterzone, #table-missing").css("display", "none");
+
+});
+$("#musterzone").click(function() {
+    $("#table-musterzone").toggle();
+    if ($('#table-musterzone').css('display') == 'none') {
+        $("#musterzone").css("background-color", "gray");
+    } else {
+        $("#musterzone").css("background-color", "#157399");
+    }
+    $("#totalinzone, #totalpob, #neutralzone, #redzone").css("background-color", "#fff");
+    $("#missing").css("background-color", "red");
+    $("#table-pob, #table-totalinzone, #table-redzone, #table-neutralzone, #table-missing").css("display", "none");
+});
+$("#missing").click(function() {
+    $("#table-missing").toggle();
+    if ($('#table-missing').css('display') == 'none') {
+        $("#missing").css("background-color", "red");
+    } else {
+        $("#missing").css("background-color", "#157399");
+    }
+    $("#totalinzone, #totalpob, #neutralzone, #redzone").css("background-color", "#fff");
+    $("#musterzone").css("background-color", "gray");
+    $("#table-pob, #table-totalinzone, #table-redzone, #table-neutralzone, #table-musterzone").css("display", "none");
+});
+</script>

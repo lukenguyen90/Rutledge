@@ -1,0 +1,52 @@
+<div id="breadcrumb">
+    <div class="container">
+        <ol class="breadcrumb">
+            <li><a ui-sref="home.profile">Add new Location</a></li>
+        </ol>
+    </div>
+</div>
+<div class="container profile">
+    <div class="row">
+        <div class="col-sm-6 pull-left">
+            <div class="row">
+                <h2>Basic information</h2>
+            </div>
+            <div class="row" data-ng-init="getStaffInfo()">
+                <div class="col-sm-5 avatar">
+                    <img class="img-responsive" ng-show="myForm.file.$valid" ngf-thumbnail="picFile">
+                    <div class="btn-option-create">
+                        <button class="btn btn-default" ng-click="picFile = null" ng-show="picFile">Remove</button>
+                    </div>
+                    <img ng-src="assets/img/no-image.jpg" width="100%" ng-show="picFile===undefined">
+                    <div class="input-group custom-control">
+                        <br>
+                        <input class="input-image form-control" type="file" ngf-select ng-model="picFile" name="file" accept="image/*" ngf-max-size="2MB" required ngf-model-invalid="errorFile">
+                    </div>
+                </div>
+                <div class="col-sm-7 no-padding">
+                    <div class="input-group custom-control">
+                        <label>Name</label>
+                        <input type="text" class="form-control" ng-model="name">
+                    </div>
+                    <div class="input-group custom-control">
+                        <label>Description</label>
+                        <textarea rows="5" type="text" class="form-control" ng-model="description"></textarea>
+                    </div>
+                    <div class="input-group custom-control">
+                        <label>Status</label>
+                        <div>
+                            <input type="radio" value="1" ng-model="status">&nbsp; Active</label>
+                            <input type="radio" value="0" ng-model="status">&nbsp; Inactive</label>
+                        </div>
+                    </div>
+                    <div class="alert alert-success" ng-show="errMessage">
+                        <strong>Alert!</strong> Can not add a new location
+                    </div>
+                    <div class="pull-right">
+                        <input class="btn btn-default btn-edit" ng-click="saveLocationInfo(picFile)" type="button" value="Save">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

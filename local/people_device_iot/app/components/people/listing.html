@@ -1,0 +1,132 @@
+<div id="breadcrumb">
+    <div class="container">
+        <ol class="breadcrumb">
+            <li><a ui-sref="home.people">People</a></li>
+        </ol>
+    </div>
+</div>
+<div class="container" data-ng-init="getInfoStaff(1)">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="action-box">
+                <ul class="view-type">
+                    <li class="tabclass list-view-1 {{class_btn_tab_1}}" ng-click="activeTab(1)">
+                        <i class="fa fa-th-large option-icon fa-lg" aria-hidden="true"></i>
+                    </li>
+                    <li class="tabclass list-view-2 {{class_btn_tab_2}}" ng-click="activeTab(2)">
+                        <i class="fa fa-th-list option-icon fa-lg" aria-hidden="true"></i>
+                    </li>
+                    <li class="tabclass list-view-3 {{class_btn_tab_3}}" ng-click="activeTab(3)">
+                        <i class="fa fa-align-justify option-icon fa-lg" aria-hidden="true"></i>
+                    </li>
+                </ul>
+                <div class="input-group search-box">
+                    <input type="text" class="form-control" id="search" ng-model="searchPeople">
+                    <div class="input-group-addon" id="btnSearch"><i class="fa fa-search"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="clear-bottom"></div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="grid-content {{view_table_1}}">
+                <ul class="people-listing horizontal-list {{items_on_row}}">
+                    <li class="{{itemClass}}" ng-repeat="people in people_listing | filter:searchPeople" ng-class="{classstatus:people.status=='Off-site'}">
+                        <div class="img-box">
+                            <a ui-sref="home.admin.staff.edit({staffId:people.id})"><img ng-src="{{people.avatar}}" class="people-image" style="width:{{img_width}}"></a>
+                            <div class="overlay" ng-if="people.status == 'Off -site'"></div ng-if="people.status == 'Off -site'">
+                        </div>
+                        <input type="checkbox" class="chk_send">
+                        <div class="info-box">
+                            <a ui-sref="home.admin.staff.edit({staffId:people.id})"><h6>{{people.firstname}} {{people.lastname}}</h6></a>
+                            <p>{{people.position}}</p>
+                            <p>{{people.email}}</p>
+                            <p>{{people.experience}}</p>
+                            <p class="on-site" ng-if="people.status == 'On -site'">{{people.status}}</p>
+                            <p ng-if="people.status == 'Off -site'">{{people.status}}</p>
+                            <p class="biography">{{people.biography}}</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="grid-table {{view_table_2}}">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Avatar</th>
+                            <th>FirstName</th>
+                            <th>LastName</th>
+                            <th>Email</th>
+                            <th>Position</th>
+                            <th>Experience</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="people in people_listing | filter:searchPeople" ng-class="{classstatus:people.status=='Off-site'}">
+                            <td class="chk_send">
+                                <input type="checkbox">
+                            </td>
+                            <td class="avatar">
+                                <a ui-sref="home.admin.staff.edit({staffId:people.id})"><img ng-src="{{people.avatar}}"></a>
+                            </td>
+                            <td><a ui-sref="home.admin.staff.edit({staffId:people.id})">{{people.firstname}}</a></td>
+                            <td>{{people.lastname}}</td>
+                            <td>{{people.email}}</td>
+                            <td>{{people.position}}</td>
+                            <td>{{people.experience}}</td>
+                            <td class="on-site" ng-if="people.status == 'On-site'">{{people.status}}</td>
+                            <td ng-if="people.status == 'Off-site'">{{people.status}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="grid-footer">
+        <p class="entries">Showing {{itemsPerPage}} of {{total_entries}} entries</p>
+        <ul id="paging" class="paging">
+            <li ng-click="showMore(10)" ng-show="isShowMore10"><a ui-sref="home.people">10 Results</a></li>
+            <li ng-click="showMore(20)" ng-show="isShowMore20"><a ui-sref="home.people">20 Results</a></li>
+            <li ng-click="showMore(40)" ng-show="isShowMore40"><a ui-sref="home.people">40 Results</a></li>
+            <li><a ui-sref="home.people" id="btnNext" ng-click="nextPage(current-1)" ng-class="{classinactive : current==1}">Previous</a></li>
+            <li ng-repeat="page in range(1,total_page)" ng-click="nextPage(page)" ng-model="currentPage"><a ui-sref="home.people" ng-class="{ classactive : page == current }">{{page}}</a></li>
+            <li><a ui-sref="home.people" id="btnNext" ng-click="nextPage(current+1)" ng-class="{classinactive : current==total_page}">Next</a></li>
+        </ul>
+    </div>
+   <!--  <input class="btn btn-default btn-send" type="button" value="Send" data-toggle="modal" data-target="#send-message"> -->
+</div>
+<div class="modal fade" id="send-message" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Send</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="To">
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="Subject">
+                        </div>
+                        <div class="form-group">
+                            <textarea class="form-control" rows="10"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <button type="button" class="btn btn-send">Send</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

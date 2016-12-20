@@ -1,0 +1,34 @@
+<div id="breadcrumb">
+    <div class="container">
+        <ol class="breadcrumb">
+            <li><a ui-sref="home.device">Device ID</a></li>
+        </ol>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="action-box">
+                <div class="input-group search-box">
+                    <input type="text" class="form-control" id="search" ng-model="searchDevice">
+                    <div class="input-group-addon" id="btnSearch"><i class="fa fa-search"></i></div>
+                </div>
+                <div class="select-box">
+                    <select class="form-control" ng-model="typeDevice" ng-click="filterByTypeDevice()">
+                        <option value="" selected>Select by type device</option>
+                        <option value="{{typedevice.id}}" ng-repeat="typedevice in listTypeDevice">{{typedevice.name}}</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="clear-bottom"></div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="list-device table-responsive">
+                <table class="table table-striped table-bordered" width="100%" datatable="" dt-options="dtOptions" dt-columns="dtColumns" dt-instance="dtInstance">
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,96 @@
+<header id="header">
+    <nav class="navbar-first">
+        <div class="container">
+            <div class="navbar-right">
+                <ul>
+                    <li>
+                        <img ng-src="{{loggedUser.avatar}}" class="avatar">
+                        <a ui-sref="home.profile({staffId:loggedUser.staffid})">{{loggedUser.fullname}}</span>
+					</li>
+					<li class="hidden-xs">
+						<a ui-sref="home">FAQs</a>
+                    </li>
+                    <li class="hidden-xs"><a href="javascript:void(0);" ng-click="logout()">Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <nav class="navbar-second" role="navigation">
+        <div class="container">
+            <div id="logo-group">
+                <a class="navbar-brand" ui-sref="home.people">
+                    <img src="assets/img/logo.jpg" alt="Rutledge Logo" class="logo">
+                </a>
+            </div>
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <div class="collapse navbar-collapse main-navigation navbar-right">
+                <ul class="nav navbar-nav">
+                    <li ui-sref-active="active">
+                        <a ui-sref="home.people">People</a>
+                        <div class="dropdown-menu sub-menu">
+                            <div class="block">
+                                <ul class="sm-links">
+                                    <li><a ui-sref="home.location">Location</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </li>
+                    <li ui-sref-active="active"><a ui-sref="home.demo">Demo</a></li>                    
+                    <!-- <li ui-sref-active="active"><a ui-sref="home.peopleiot">people IOT Locator</a></li> -->
+                    <!-- <li ui-sref-active="active"><a ui-sref="home.device">Device</a></li> -->
+                    <!-- <li ui-sref-active="active"><a ui-sref="home.deviceiot">Device IOT</a></li> -->
+                    <!-- <li ui-sref-active="active"><a ui-sref="home.notification">Notification</a></li> -->
+                    <li ui-sref-active="active">
+                        <a ui-sref="home.admin">Admin</a>
+                        <div class="dropdown-menu sub-menu">
+                            <div class="block">
+                                <h3>Device</h3>
+                                <ul class="sm-links">
+                                    <li><a ui-sref="home.admin.devicelist">List devices</a></li>
+                                    <li><a ui-sref="home.admin.typedevice">Type devices</a></li>
+                                    <li><a ui-sref="home">Registor a device</a></li>
+                                    <li><a ui-sref="home.admin.assigndevice">Assign device</a></li>
+                                </ul>
+                            </div>
+                            <!-- <div class="block">
+                                <h3>Basic data</h3>
+                                <ul class="sm-links">
+                                    <li><a ui-sref="home.admin.location">List location</a></li>
+                                    <li><a ui-sref="home.admin.zone">List zone</a></li>
+                                    <li><a ui-sref="home.admin.room">List Room</a></li>
+                                </ul>
+                            </div> -->
+                            <!-- <div class="block">
+                                <h3>Rule</h3>
+                                <ul class="sm-links">
+                                    <li><a ui-sref="home">Add rule</a></li>
+                                    <li><a ui-sref="home">List rule</a></li>
+                                </ul>
+                            </div> -->
+                            <div class="block">
+                                <h3>People Management</h3>
+                                <ul class="sm-links">
+                                    <li><a ui-sref="home.admin.staff">List person</a></li>
+                                    <li><a ui-sref="home">Assign</a></li>
+                                    <li><a ui-sref="home.message">Send message</a></li>
+                                </ul>
+                            </div>
+                            <!-- <div class="block">
+                                <h3>Notification</h3>
+                                <ul class="sm-links">
+                                    <li><a ui-sref="home.admin.notification">List notification</a></li>
+                                </ul>
+                            </div> -->
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>

@@ -1,0 +1,297 @@
+<html>
+
+<head>
+    <style>
+    body {
+        padding: 0;
+        margin: 0;
+    }
+    </style>
+    <script type="text/javascript" src="/assets/js/p5/p5.min.js"></script>
+    <!-- <script type="text/javascript" src="/assets/js/p5/sketch.js"></script> -->
+    <!-- <script type="text/javascript" src="/assets/js/p5/p5.dom.js"></script> -->
+    <script type="text/javascript" src="/assets/js/p5/jquery-3.1.0.min.js"></script>
+    <script type="text/javascript">
+    // start get variables from url
+    var oUrl = {};
+    var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m, key, value) {
+        oUrl[key] = value;
+    });
+    // zone infomation
+    // image
+    var zoneimage = oUrl['zoneimage'];
+    if (zoneimage === 'null') {
+        zoneimage = '/assets/img/deviceiot/nomap.png';
+    }
+    // zone size
+    var zonesize = {
+            'x': oUrl['zonewidth'],
+            'y': oUrl['zoneheight']
+        }
+        // end set variables from url
+
+    // startsetup default variables
+    var img;
+    var display_width;
+    var display_height;
+    var grid_width;
+    var grid_height;
+    var grid_text_size;
+    var zoom_number;
+    var col_number;
+    var row_number;
+    var device_selected_id;
+    var device_list;
+    var device_size;
+    var view_padding;
+    // end setup default variables
+
+    // P5 functions
+    function preload() { // preload() runs once
+        img = loadImage(zoneimage);
+    }
+
+    function setup() {
+        view_padding = 30;
+        display_width = img.width;
+        display_height = img.height;
+        grid_width = img.width / zonesize.x;
+        grid_height = img.height / zonesize.y;
+        col_number = round(display_width / grid_width);
+        row_number = round(display_height / grid_height);
+        device_list = {};
+        zoom_number = 0;
+        grid_text_size = 10;
+        resetDeviceSize();
+
+        current_position = {
+            'col': 0,
+            'row': 0,
+            'isInside': false
+        }
+
+        createCanvas(display_width+view_padding*2, display_height+view_padding*2);
+    }
+    // Drawing functions
+    function draw() {
+        background(255);
+        image(img, view_padding, view_padding, display_width, display_height);
+        // draw mouse position
+        if (current_position.isInside) {
+            draw_mouse_position();
+        }
+        draw_grid();
+        draw_device();
+    }
+    // Create grid view 
+    function draw_grid() {
+        textSize(grid_text_size);
+        stroke(153);
+        fill(153);
+        var tp = {
+            'x': grid_text_size / 2,
+            'y': grid_text_size * 1.5
+        }
+        for (var i = 0; i <= col_number; i++) {
+            p1 = i * grid_width + view_padding;
+            p2 = 0 + view_padding;
+            p3 = i * grid_width + view_padding;
+            p4 = display_height + view_padding;
+            line(p1, p2, p3, p4);
+            text(i, p1 + tp.x, p2 + tp.y);
+        };
+        for (var j = 0; j <= row_number; j++) {
+            p1 = 0 + view_padding;
+            p2 = j * grid_height + view_padding;
+            p3 = display_width + view_padding;
+            p4 = j * grid_height + view_padding;
+            line(p1, p2, p3, p4);
+            if (j > 0)
+                text(j, p1 + tp.x, p2 + tp.y);
+        };
+    }
+
+    function draw_mouse_position() {
+        var p1 = current_position.col * grid_width + view_padding;
+        var p2 = 0 + view_padding;
+        var p3 = 0 + view_padding;
+        var p4 = current_position.row * grid_height + view_padding;
+        // fill(230);
+        // rect(p1, p2, grid_width, display_height);
+        // rect(p3, p4, display_width, grid_height);
+        fill(200,50);
+        rect(p1, p4, grid_width, grid_height);
+    }
+
+    function draw_device() {
+        var default_space = device_size / 2;
+        Object.keys(device_list).map(function(mk) {
+            var d = device_list[mk];
+            if (d.isDeploy == 1) {
+                if (d.deviceid == device_selected_id) {
+                    fill(hsbrand());
+                } else {
+                    fill(21, 114, 153);
+                }
+                var p1 = d.col * grid_width + view_padding - default_space ;
+                var p2 = d.row * grid_height + view_padding - default_space ;
+                rect(p1, p2, device_size, device_size);
+                textAlign(CENTER);
+                text(d.name, d.col * grid_width, p2 + device_size * 1.3);
+            }
+        });
+        textAlign(LEFT);
+    }
+
+    // event functions
+    function mouseMoved() {
+        if (mouseX >= 0 && mouseX <= display_width && mouseY >= 0 && mouseY <= display_height) {
+            current_position = {
+                'col': parseInt(mouseX / grid_width),
+                'row': parseInt(mouseY / grid_height),
+                'isInside': true
+            }
+        } else {
+            current_position = {
+                'col': 0,
+                'row': 0,
+                'isInside': false
+            }
+        }
+    }
+
+    function mousePressed() {
+        if (device_selected_id !== '') {
+            var x = mouseX - view_padding;
+            x = x < 0 ? 0 : x ;
+            x = x > display_width ? display_width : x ;
+            var y = mouseY - view_padding;
+            y = y < 0 ? 0 : y ;
+            y = y > display_width ? display_width : y ;
+            var col = fix2dec(x / grid_width);
+            var row = fix2dec(y / grid_height);
+            console.log(col);
+            console.log(row);
+            if (typeof(device_list[device_selected_id]) != 'undefined') {
+                device_list[device_selected_id].col = col;
+                device_list[device_selected_id].row = row;
+                device_list[device_selected_id].isDeploy = 1;
+                window.parent.setDeployed(device_list[device_selected_id]);
+            }
+        }
+    }
+
+    function removeSelectDevice() {
+        if (device_selected_id !== '') {
+            console.log(device_selected_id);
+            if (typeof(device_list[device_selected_id]) != 'undefined') {
+                device_list[device_selected_id].isDeploy = 0;
+                return true;
+            }
+        }
+        return false;
+    }
+    // Stop
+    function mouseReleased() {
+        current_position = {
+              'col'         : 0
+            , 'row'         : 0
+            , 'isInside'    : false
+        }
+    }
+
+    // setting functions
+    function setSelectedDevice(deviceid) {
+        device_selected_id = deviceid;
+    }
+
+    function setDevice(devices) {
+        device_list = {};
+        devices.map(function(d) {
+            var coordinates = [];
+            if (d.coordinates != null) {
+                coordinates = d.coordinates.split(",");
+            }
+
+            newDevice = {
+                'deviceid': d.id,
+                'col': coordinates[0],
+                'row': coordinates[1],
+                'name': d.name,
+                'isDeploy': d.isdeploy
+            };
+            device_list[d.id] = newDevice;
+        });
+    }
+
+    function resetSizeCanvas(zoom_plus) {
+        if (!(zoom_plus == -1 && zoom_number == -9)) {
+            zoom_number += zoom_plus;
+            display_width = img.width + (img.width * (zoom_number * 0.1));
+            display_height = img.height + (img.height * (zoom_number * 0.1));
+            resetGrid();
+            resetDeviceSize();
+            resizeCanvas(display_width, display_height);
+        }
+    }
+
+    function resetGrid() {
+        grid_width = display_width / zonesize.x;
+        grid_height = display_height / zonesize.y;
+        grid_text_size = 10 + zoom_number;
+    }
+
+    function resetDeviceSize() {
+        device_size = round(grid_width / 3);
+        if (device_size < 5) {
+            device_size = 5;
+        }
+    }
+    function fix2dec(x) {
+        return +(x).toFixed(2)
+    }
+
+    function hsbrand() {
+        var r, b, g, s = 0.72,
+            l = 0.5
+        var h = Math.round(Math.random() * 360)
+        var hq = (+h.toFixed(3)) / 60
+        var c = (1 - Math.abs(2 * l - 1)) * s
+        var x = (1 - Math.abs(hq % 2 - 1)) * c
+        var m = l - 0.5 * c
+        var revert = function(x) {
+            return Math.round((x + m) * 255).toString(16)
+        }
+        switch (Math.floor(hq)) {
+            case 6:
+            case 0:
+                r = c, g = x, b = 0;
+                break;
+            case 1:
+                r = x, g = c, b = 0;
+                break;
+            case 2:
+                r = 0, g = c, b = x;
+                break;
+            case 3:
+                r = 0, g = x, b = c;
+                break;
+            case 4:
+                r = x, g = 0, b = c;
+                break;
+            case 5:
+                r = c, g = 0, b = x;
+                break;
+            default:
+                r = 0, g = 0, b = 0;
+                break;
+        }
+        return '#' + revert(r) + revert(g) + revert(b)
+    }
+    </script>
+</head>
+
+<body>
+</body>
+
+</html>

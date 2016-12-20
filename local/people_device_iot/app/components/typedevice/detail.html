@@ -1,0 +1,36 @@
+<div id="breadcrumb">
+    <div class="container">
+        <ol class="breadcrumb">
+            <li><a href="#">Detail Type Device</a></li>
+        </ol>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="alert alert-success" ng-show="errMessage">
+                <strong>Alert!</strong> Can not create a new type device
+            </div>
+            <div class="input-group custom-control">
+                <label>Name</label>
+                <input type="text" class="form-control" ng-model="name" disabled>
+            </div>
+            <div class="input-group custom-control">
+                <label>Title</label>
+                <input type="text" class="form-control" ng-model="title" disabled>
+            </div>
+            <div class="input-group custom-control">
+                <label>Description</label>
+                <textarea rows="4" type="text" class="form-control" ng-model="description" disabled></textarea>
+            </div>
+            <div class="input-group custom-control">
+                <label>Date created</label>
+                <input type="text" class="form-control" ng-model="datecreated" disabled>
+            </div>
+            <div class="input-group custom-control">
+                <label>Date mofified</label>
+                <input type="text" class="form-control" ng-model="datemodified" disabled>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,69 @@
+<div id="breadcrumb">
+    <div class="container">
+        <ol class="breadcrumb">
+            <li><a ui-sref="home.profile">Detail {{name}}</a></li>
+        </ol>
+    </div>
+</div>
+<div class="container profile">
+    <div class="row">
+        <div class="col-sm-3 pull-left">
+            <div class="row">
+                <h2>Basic information</h2>
+            </div>
+            <div class="row" data-ng-init="getZoneInfo()">
+                <img class="img-responsive" ng-show="myForm.file.$valid" ngf-thumbnail="picFile">
+                <img ng-src="assets/img/no-image.jpg" width="100%" ng-show="picFile==null">
+                <div class="input-group custom-control">
+                    <label>Name</label>
+                    <input type="text" class="form-control" ng-model="name" disabled>
+                </div>
+                <div class="input-group custom-control">
+                    <label>Coordinate X</label>
+                    <input type="text" class="form-control" ng-model="coordinatex" disabled>
+                </div>
+                <div class="input-group custom-control">
+                    <label>Coordinate Y</label>
+                    <input type="text" class="form-control" ng-model="coordinatey" disabled>
+                </div>
+                <div class="input-group custom-control">
+                    <label>Description</label>
+                    <textarea rows="5" type="text" class="form-control" ng-model="description" disabled></textarea>
+                </div>
+                <div class="input-group custom-control">
+                    <label>Location</label>
+                    <input type="text" class="form-control" ng-model="locationId" disabled>
+                </div>
+                <div class="input-group custom-control">
+                    <label>Zone</label>
+                    <input type="text" class="form-control" ng-model="zoneId" disabled>
+                </div>
+                <div class="input-group custom-control">
+                    <label>Date created</label>
+                    <input type="text" class="form-control" ng-model="datecreated" disabled>
+                </div>
+                <div class="input-group custom-control">
+                    <label>Date modified</label>
+                    <input type="text" class="form-control" ng-model="datemodified" disabled>
+                </div>
+                <div class="input-group custom-control">
+                    <label>Status</label>
+                    <div>
+                        <input type="radio" value="1" ng-model="status" disabled>&nbsp; Active</label>
+                        <input type="radio" value="0" ng-model="status" disabled>&nbsp; Inactive</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-9">
+            <div style="overflow: scroll;">
+                <canvas id="canvas"></canvas>
+            </div>
+            <button class="btn btn-default btn-zoom" ng-click="zoomOut()" type="button" name="zoomOut" value="Zoom Out" style="width:120px">Zoom Out</button>
+            <button class="btn btn-default btn-zoom" ng-click="zoomIn()" type="button" name="zoomIn" value="Zoom In" style="width:120px">Zoom In</button>
+            <div class="alert alert-success" ng-show="errMessage">
+                <strong>Alert!</strong> Can not add a new room
+            </div>
+        </div>
+    </div>
+</div>

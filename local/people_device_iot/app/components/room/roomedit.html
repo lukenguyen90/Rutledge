@@ -1,0 +1,79 @@
+<div id="breadcrumb">
+    <div class="container">
+        <ol class="breadcrumb">
+            <li><a ui-sref="home.profile">Edit Room</a></li>
+        </ol>
+    </div>
+</div>
+<div class="container profile">
+    <div class="row">
+        <div class="col-sm-3 pull-left">
+            <div class="row">
+                <h2>Basic information</h2>
+            </div>
+            <div class="row">
+                <img class="img-responsive" ng-show="myForm.file.$valid" ngf-thumbnail="picFile">
+                <div class="btn-option-create">
+                    <button class="btn btn-default" ng-click="picFile = null" ng-show="picFile">Remove</button>
+                </div>
+                <img ng-src="assets/img/no-image.jpg" width="100%" ng-show="picFile==null">
+                <div class="input-group custom-control">
+                    <br>
+                    <input class="input-image form-control" type="file" ngf-select ng-model="picFile" name="file" accept="image/*" ngf-max-size="2MB" required ngf-model-invalid="errorFile">
+                </div>
+                <div class="input-group custom-control">
+                    <label>Name</label>
+                    <input type="text" class="form-control" ng-model="name">
+                </div>
+                <div class="input-group custom-control">
+                    <label>Coordinate X</label>
+                    <input type="text" class="form-control" ng-model="coordinatex">
+                </div>
+                <div class="input-group custom-control">
+                    <label>Coordinate Y</label>
+                    <input type="text" class="form-control" ng-model="coordinatey">
+                </div>
+                <div class="input-group custom-control">
+                    <label>Description</label>
+                    <textarea rows="5" type="text" class="form-control" ng-model="description"></textarea>
+                </div>
+                <div class="input-group custom-control">
+                    <label>Location</label>
+                    <select class="form-control" ng-model="locationId" ng-change="selectZoneByLocation(locationId)">
+                        <option value="{{location.id}}" ng-repeat="location in allLocation">{{location.name}}</option>
+                    </select>
+                </div>
+                <div class="input-group custom-control">
+                    <label>Zone</label>
+                    <select class="form-control" ng-model="zoneId" ng-change="selectZoneId(zoneId)">
+                        <option value="{{zone.id}}" ng-repeat="zone in allZone">{{zone.name}}</option>
+                    </select>
+                </div>
+                <div class="input-group custom-control">
+                    <label>Status</label>
+                    <div>
+                        <input type="radio" value="1" ng-model="status">&nbsp; Active</label>
+                        <input type="radio" value="0" ng-model="status">&nbsp; Inactive</label>
+                    </div>
+                </div>
+                <div class="alert alert-success" ng-show="errMessage">
+                    <strong>Alert!</strong> Can not edit room
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-9">
+            <div style="overflow: scroll;">
+                <canvas id="canvas"></canvas>
+            </div>
+            <button class="btn btn-default btn-zoom" ng-click="zoomOut()" type="button" name="zoomOut" value="Zoom Out" style="width:120px">Zoom Out</button>
+            <button class="btn btn-default btn-zoom" ng-click="zoomIn()" type="button" name="zoomIn" value="Zoom In" style="width:120px">Zoom In</button>
+            <div class="alert alert-success" ng-show="errMessage">
+                <strong>Alert!</strong> Can not add a new room
+            </div>
+            <div class="pull-right">
+                <input class="btn btn-default btn-edit" ng-click="editRoomInfo(picFile)" type="button" value="Save">
+            </div>
+        </div>
+    </div>
+</div>
+</div>

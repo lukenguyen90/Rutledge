@@ -1,0 +1,70 @@
+<style type="text/css">
+body {
+    background-image: url('img/login_bg.jpg')
+}
+</style>
+<div class="container login-box">
+    <div class="row">
+        <div class="col-md-8 notification-container">
+            <div class="box-notification">
+                <p class="number-notification">1</p>
+                <div class="content-notification">
+                    <h3>NOTIFICATION 1</h3>
+                    <hr>
+                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+                </div>
+            </div>
+            <div class="box-notification">
+                <p class="number-notification">2</p>
+                <div class="content-notification">
+                    <h3>NOTIFICATION 2</h3>
+                    <hr>
+                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-login">
+                <form class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <input id="country_selector" type="text">
+                    </div>
+                    <div class="form-group">
+                        <img src="img/logo.jpg">
+                        <div class="alert alert-block alert-danger" ng-show="isFailed">
+                            <h4 class="alert-heading">Access Failed !</h4>
+                            <p>
+                                {{loginMessage}}
+                            </p>
+                        </div>
+                        <div class="alert alert-block alert-danger" ng-show="isNull">
+                            <h4 class="alert-heading">Warning !</h4>
+                            <p>
+                                {{nullMessage}}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" id="email" placeholder="Enter email" ng-model="username">
+                    </div>
+                    <div class="form-group">
+                        <input type="password" class="form-control" id="pwd" placeholder="Enter password" ng-model="password">
+                    </div>
+                    <div class="form-group">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox"> Remember me
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-default" ng-click="login()">Login</button>
+                    </div>
+                    <div class="form-group">
+                        <a href="#">Forgot Username | Password</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

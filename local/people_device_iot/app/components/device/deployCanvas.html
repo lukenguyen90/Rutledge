@@ -1,0 +1,397 @@
+<html>
+	<head>
+		<style> body {padding: 0; margin: 0;} </style>
+	    <script type="text/javascript" src="/assets/js/p5/p5.min.js"></script>
+	    <!-- <script type="text/javascript" src="/assets/js/p5/sketch.js"></script> -->
+	    <script type="text/javascript" src="/assets/js/p5/p5.dom.js"></script>
+	    <script type="text/javascript" src="/assets/js/p5/jquery-3.1.0.min.js"></script>
+		<script type="text/javascript">
+		// viewport
+			var viewportWidth;
+			var viewportHeight;
+			var padding_view = 20 ;
+			var padding_left = 0 ;
+			var padding_top  = 1 ;
+
+			// center position
+			var cMouseX = 0 ;
+			var cMouseY = 0 ;
+
+			// old position
+			var oMouseX = 0 ;
+			var oMouseY = 0 ;
+
+			// when mouse pressed and move => isMove is true
+			var isMove  = false;
+
+			// view zone content image
+			var viewZoneWidth  = 0 ;
+			var viewZoneHeight = 0 ;
+
+			// diff number
+			var dMouseX = 0 ;
+			var dMouseY = 0 ;	
+
+			// max diff number
+			var maxDMouseX = 0 ;
+			var maxDMouseY = 0 ;
+
+			// if width of img GT width of viewport
+			var isWidthLonger = true;
+			// grid info
+			var grid_text_size = 15 ;
+			var device_size = 20 ;
+			var device_text_size = 10 ;
+
+			// the more standards compliant browsers (mozilla/netscape/opera/IE7) use window.innerWidth and window.innerHeight
+			if (typeof window.innerWidth != 'undefined'){
+			  viewportWidth = window.innerWidth,
+			  viewportHeight = window.innerHeight
+			}
+			// IE6 in standards compliant mode (i.e. with a valid doctype as the first line in the document)
+			else if (typeof document.documentElement != 'undefined' && 
+				typeof document.documentElement.clientWidth != 'undefined' && 
+				document.documentElement.clientWidth != 0){
+			   viewportWidth = document.documentElement.clientWidth,
+			   viewportHeight = document.documentElement.clientHeight
+			}else{// older versions of IE
+			   viewportWidth = document.getElementsByTagName('body')[0].clientWidth,
+			   viewportHeight = document.getElementsByTagName('body')[0].clientHeight
+			}
+
+		// start get variables from url
+		    var oUrl = {};
+		    var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m, key, value) {
+		        oUrl[key] = value;
+		    });
+		    // zone infomation
+		    // image
+		    var zoneimage = oUrl['zoneimage'];
+		    if (zoneimage === 'null') {
+		        zoneimage = '/assets/img/deviceiot/nomap.png';
+		    }
+		    // zone size
+		    var zonewidth 	= oUrl['zonewidth'];
+		    var zoneheight 	= oUrl['zoneheight'];
+		    var grid_width,grid_height;
+	    // end set variables from url
+	    	var noMove = true ;
+
+	    // Zone variables
+	    	device_selected_id = "";
+	    	device_list = {};
+
+	    // P5 functions
+			function preload() {  // preload() runs once
+				img = loadImage(zoneimage);
+			}
+			function setup() {
+				viewportWidth  -= padding_view * 2;
+				viewportHeight -= padding_view * 2;
+				if( (viewportWidth/viewportHeight) > (zonewidth/zoneheight) ){
+					viewZoneHeight = viewportHeight ;
+					viewZoneWidth  = viewZoneHeight * img.width / img.height ;
+				}else{
+					isWidthLonger = false;
+					viewZoneWidth  = viewportWidth ;
+					viewZoneHeight = viewZoneWidth * img.height / img.width ;
+				}
+				cMouseX = viewportWidth / 2 ;
+				cMouseY = viewportHeight / 2 ;
+				grid_width = viewZoneWidth/zonewidth;
+				grid_height= viewZoneHeight/zoneheight;
+				calculatePadding();
+				calculateZoneView();
+				createCanvas(viewportWidth+padding_view * 2, viewportHeight+padding_view * 2);
+			}
+
+			function draw() {
+				background(255,255,255);
+				//drag to move the world.
+				if( isMove ){
+					var tMouseX = mouseX ;
+					var tMouseY = mouseY ;
+					if( (tMouseX - oMouseX) > 0 || (tMouseY - oMouseY) > 0 ){
+						noMove = false ;
+					}
+					dMouseX += tMouseX - oMouseX ;
+					dMouseY += tMouseY - oMouseY ;
+					oMouseX = tMouseX ;
+					oMouseY = tMouseY ;
+					validateMouse();				
+				}
+				image(img, padding_left + dMouseX + padding_view, padding_top + dMouseY + padding_view, viewZoneWidth, viewZoneHeight);
+				drawGrid();
+				drawDevice();
+
+			}
+			function mousePressed(){
+				if( mouseButton == 'left'){
+					isMove  = true;
+					oMouseX = mouseX;
+					oMouseY = mouseY;
+					cursor(MOVE);
+				}
+			}
+
+			function mouseClicked(){
+				if( device_selected_id != "" && mouseButton == 'left' && noMove ){
+					noMove = true;
+					var col = (mouseX - padding_left - dMouseX - padding_view ) / grid_width ;
+					var row = (mouseY - padding_top - dMouseY - padding_view ) / grid_height ;
+					col = fix2dec(col), row = fix2dec(row);
+					if(col >= 0 && row >= 0 && col <= zonewidth && row <= zoneheight && device_list[device_selected_id] != undefined ){
+	            		device_list[device_selected_id].col = col ;
+	            		device_list[device_selected_id].row = row ;
+	            		device_list[device_selected_id].isdeploy = 1 ;
+	            		window.parent.deployDevice({
+	            			deviceid : device_selected_id,
+	            			isdeploy : 1 ,
+	            			coordinates : col + "," + row
+	            		});
+					}
+				}
+			}
+
+			function mouseReleased(){
+				isMove = false;
+				cursor(ARROW);
+			}
+
+			function mouseWheel(event){
+				cursor(CROSS);
+				dMouseX += (mouseX - dMouseX) * (event.delta/100) ;
+				dMouseY += (mouseY - dMouseY) * (event.delta/100);
+				viewZoneWidth -= viewZoneWidth * (event.delta/100) ;
+				viewZoneHeight -= viewZoneHeight * (event.delta/100);
+
+				if(isWidthLonger){
+					if( viewZoneHeight  < viewportHeight ){
+						viewZoneHeight = viewportHeight ;
+						viewZoneWidth = viewZoneHeight * (zonewidth/zoneheight);
+					}else{
+						grid_text_size -= grid_text_size * (event.delta/100);
+						device_size -= device_size * (event.delta/200);
+						device_text_size -= device_text_size * (event.delta/200);
+					}
+				}else{
+					if( viewZoneWidth < viewportWidth ){
+						viewZoneWidth = viewportWidth ;
+						viewZoneHeight = viewZoneWidth * (zoneheight/zonewidth);
+					}else{
+						grid_text_size -= grid_text_size * (event.delta/100);
+						device_size -= device_size * (event.delta/200);
+						device_text_size -= device_text_size * (event.delta/200);
+					}
+				}
+
+				grid_width = viewZoneWidth/zonewidth;
+				grid_height= viewZoneHeight/zoneheight;
+				
+				calculatePadding();
+				calculateZoneView();
+				setTimeout(function(){ 
+					cursor(ARROW); 
+				}, 300);
+			}
+
+			function calculatePadding(){
+				padding_left 	= viewportWidth - viewZoneWidth ;
+				padding_top  = viewportHeight - viewZoneHeight ;
+
+				padding_left = padding_left > 0 ? padding_left / 2 : 0 ;
+				padding_top = padding_top > 0 ? padding_top / 2 : 0 ;
+			}
+
+			function calculateZoneView(){
+				maxDMouseX = viewportWidth - viewZoneWidth   < 0 ? viewportWidth - viewZoneWidth : 0 ;
+				maxDMouseY = viewportHeight - viewZoneHeight < 0 ? viewportHeight - viewZoneHeight : 0 ;
+				validateMouse();
+			}
+
+			function validateMouse(){
+				if( dMouseX < maxDMouseX ){
+					dMouseX = maxDMouseX;
+				}
+				if( dMouseY < maxDMouseY ){
+					dMouseY = maxDMouseY;
+				}
+				if( dMouseX > 0 ){
+					dMouseX = 0;
+				}
+				if( dMouseY > 0 ){
+					dMouseY = 0;
+				}		
+			}
+		// draw grid view
+			function drawGrid(){
+		        textSize(grid_text_size);
+		        stroke(153);
+		        fill(153);
+		        textAlign(LEFT);
+		        var dx = padding_left+dMouseX+padding_view;
+		        var dy = padding_top+dMouseY+padding_view;
+		        for (var i = 0; i <= zonewidth; i++) {
+		            p1 = i * grid_width;
+		            p2 = 0;
+		            p3 = i * grid_width;
+		            p4 = viewZoneHeight;
+		            line(p1 + dx, p2 + dy, p3 + dx, p4 + dy );
+		            text(i, p1 + dx + grid_text_size/2 , p2 + dy + grid_text_size );
+		        };
+		        for (var j = 0; j <= zoneheight; j++) {
+		            p1 = 0;
+		            p2 = j * grid_height;
+		            p3 = viewZoneWidth;
+		            p4 = j * grid_height;
+		            line( p1 + dx , p2 + dy , p3 + dx , p4 + dy );
+		            if (j > 0)
+		                text(j, p1 + dx + grid_text_size/2, p2 + dy + grid_text_size);
+		        };
+			}
+
+			function drawDevice(){
+		        Object.keys(device_list).map(function(mk) {
+		            var d = device_list[mk];
+		            if (d.isdeploy == 1) {
+		                switch(d.type.toLowerCase() ){
+		                	case "server":
+		                		drawServer(d.col,d.row,d.name);
+		                	break;
+		                	case "relay":
+		                		drawRelay(d.col,d.row,d.name);
+		                	break;
+		                	default :
+		                		drawCircle(d.col,d.row,d.name);
+		                	break;
+		                }
+		            }
+		        });
+			}
+
+			function drawServer(x,y,name){
+                stroke(21, 114, 153);
+                fill(21, 114, 153);
+		        var dx = padding_left+dMouseX+padding_view;
+		        var dy = padding_top+dMouseY+padding_view;
+                var p1 = x * grid_width + dx - device_size / 2;
+                var p2 = y * grid_height + dy - device_size / 2;
+                rect(p1, p2, device_size, device_size);
+
+				textAlign(CENTER);
+                textSize(device_text_size);
+		        text(name, p1 + device_size / 2, p2 + device_size + device_text_size * 1.25);
+                textAlign(LEFT);
+			}
+
+			function drawRelay(x,y,name){
+                stroke(21, 114, 153);
+                fill(21, 114, 153);
+		        var dx = padding_left+dMouseX+padding_view;
+		        var dy = padding_top+dMouseY+padding_view;
+                var x1 = x * grid_width + dx ;
+                var y1 = y * grid_height + dy - device_size / 2;
+                var x2 = x * grid_width + dx - device_size / 2;
+                var y2 = y * grid_height + dy + device_size / 2;
+                var x3 = x * grid_width + dx + device_size / 2;
+                var y3 = y * grid_height + dy + device_size / 2;
+                triangle(x1, y1, x2, y2, x3, y3);
+                // write name
+				textAlign(CENTER);
+                textSize(device_text_size);
+		        text(name, x1, y1 + device_size + device_text_size*1.25);
+                textAlign(LEFT);
+			}
+
+			function drawCircle(x,y,name){
+		        var dx = padding_left+dMouseX+padding_view;
+		        var dy = padding_top+dMouseY+padding_view;
+                stroke(0, 191, 0);
+                fill(0, 191, 0);
+                var x1 = x * grid_width + dx ;
+                var y1 = y * grid_height + dy ;
+                ellipse(x , y, device_size, device_size);
+
+                textAlign(CENTER);
+                textSize(device_text_size);
+                text(name, x1 , y1 + device_size/2 + device_text_size*1.25 );
+                textAlign(LEFT);
+			}
+
+
+		// control functions
+		    function setSelectedDevice(deviceid) {
+		        device_selected_id = deviceid;
+		    }
+		    function setDevice(devices) {
+		        device_list = {};
+		        devices.map(function(d) {
+		            var coordinates = [];
+		            if (d.coordinates != null) {
+		                coordinates = d.coordinates.split(",");
+		            }
+
+		            newDevice = {
+		                'deviceid': d.id,
+		                'col': coordinates[0],
+		                'row': coordinates[1],
+		                'name': d.name,
+		                'type':d.type,
+		                'isdeploy': d.isdeploy
+		            };
+		            device_list[d.id] = newDevice;
+		        });
+		    }
+		    function undeploy(deviceid){
+		    	device_list[deviceid].isdeploy = 0 ;
+		    }
+
+		    // fix to 2 decimal points
+
+		    function fix2dec(x) {
+		    	return +(x).toFixed(2)
+		    }
+
+		    // random color
+		    function hsbrand() {
+		        var r, b, g, s = 0.72,
+		            l = 0.5
+		        var h = Math.round(Math.random() * 360)
+		        var hq = (+h.toFixed(3)) / 60
+		        var c = (1 - Math.abs(2 * l - 1)) * s
+		        var x = (1 - Math.abs(hq % 2 - 1)) * c
+		        var m = l - 0.5 * c
+		        var revert = function(x) {
+		            return Math.round((x + m) * 255).toString(16)
+		        }
+		        switch (Math.floor(hq)) {
+		            case 6:
+		            case 0:
+		                r = c, g = x, b = 0;
+		                break;
+		            case 1:
+		                r = x, g = c, b = 0;
+		                break;
+		            case 2:
+		                r = 0, g = c, b = x;
+		                break;
+		            case 3:
+		                r = 0, g = x, b = c;
+		                break;
+		            case 4:
+		                r = x, g = 0, b = c;
+		                break;
+		            case 5:
+		                r = c, g = 0, b = x;
+		                break;
+		            default:
+		                r = 0, g = 0, b = 0;
+		                break;
+		        }
+		        return '#' + revert(r) + revert(g) + revert(b)
+		    }
+		</script>
+	</head>
+	<body>
+	</body>
+</html>

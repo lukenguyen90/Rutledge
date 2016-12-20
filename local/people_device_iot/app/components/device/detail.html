@@ -1,0 +1,60 @@
+<div id="breadcrumb">
+    <div class="container">
+        <ol class="breadcrumb">
+            <li><a href="#">{{deviceDetail.name}}</a></li>
+        </ol>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-md-3 device-image">
+            <img ng-src="{{deviceDetail.imageDevice}}" ng-if="deviceDetail.imageDevice != null">
+            <img src="assets/img/no-image.jpg" ng-if="deviceDetail.imageDevice == null">
+        </div>
+        <div class="col-md-9">
+            <div class="input-group custom-control">
+                <label>Chip ID</label>
+                <input type="text" class="form-control" value="{{deviceDetail.chipid}}" disabled>
+            </div>
+            <div class="input-group custom-control">
+                <label>Description</label>
+                <textarea type="text" class="form-control" ng-model="description" disabled></textarea>
+            </div>
+            <div class="input-group custom-control">
+                <label>Type</label>
+                <input type="text" class="form-control" value="{{deviceDetail.typename}}" disabled>
+            </div>
+            <div class="input-group custom-control">
+                <label>IPv6</label>
+                <input type="text" class="form-control" value="{{deviceDetail.ipv6}}" disabled>
+            </div>
+            <div class="input-group custom-control">
+                <label>Coordinates</label>
+                <input type="text" class="form-control" value="{{deviceDetail.coordinates}}" disabled>
+            </div>
+            <div class="input-group custom-control">
+                <label>Expireddates</label>
+                <input type="text" class="form-control" value="{{deviceDetail.expireddates |date:'medium'}}" disabled>
+            </div>
+            <div class="input-group custom-control">
+                <label>Status</label>
+                <input type="text" class="form-control" value="{{deviceDetail.status_device}}" disabled>
+            </div>
+            <div class="input-group custom-control">
+                <label>Date created</label>
+                <input type="text" class="form-control" value="{{deviceDetail.datecreated |date:'medium'}}" disabled>
+            </div>
+            <div class="input-group custom-control">
+                <label>Date Modified</label>
+                <input type="text" class="form-control" value="{{deviceDetail.datemodified |date:'medium'}}" disabled>
+            </div>
+            <div class="input-group custom-control">
+                <label>Is Active</label>
+                <div>
+                    <input type="radio" value="1" ng-model="status" disabled>&nbsp; Active</label>
+                    <input type="radio" value="0" ng-model="status" disabled>&nbsp; Inactive</label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

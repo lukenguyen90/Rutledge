@@ -1,0 +1,149 @@
+{
+  "head": "device management, deployment simulation, and experiment's descriptions",
+  "mighty": {
+    "serials": {
+      "155100014": [
+        "B607A6C200311702",
+        "relay"
+      ],
+      "155100131": [
+        "7F0510BBA6C80240",
+        "relay"
+      ],
+      "155100266": [
+        "62B3A3D485E47AA1",
+        "relay"
+      ],
+      "155100270": [
+        "BB54D3CD012BDFE5",
+        "server"
+      ],
+      "155100272": [
+        "ECFAAA95DA48722F",
+        "tag"
+      ]
+    }
+  },
+  "custom": {
+    "serials": {
+      "001": [
+        "B2D4D24553BE8501",
+        "tag"
+      ],
+      "002": [
+        "F3BF5CD046EE6855",
+        "tag"
+      ],
+      "011": [
+        "A67EDD465497E95F",
+        "relay"
+      ],
+      "012": [
+        "7EB3ED354C9FC3F1",
+        "relay"
+      ],
+      "014": [
+        "29EBCC199E46C124",
+        "relay"
+      ],
+      "015": [
+        "17FC3AF1C3E7638F",
+        "relay"
+      ],
+      "016": [
+        "D9E2667BC9F5A5DC",
+        "relay"
+      ],
+      "017": [
+        "10AAAB0E6D546447",
+        "relay"
+      ]
+    }
+  },
+  "simulation": {
+    "area": {
+      "width": 6,
+      "height": 6,
+      "inside": true
+    },
+    "duration": 4,
+    "awaymid": 3,
+    "onestep": 1.4,
+    "dnoise": [
+      0,
+      0
+    ],
+    "tagsinplay": [
+      {
+        "id": "569803C5C7364867",
+        "name": "mob",
+        "steps": "Infinity"
+      },
+      {
+        "id": "E7539CBF6FE3A312",
+        "name": "hidden",
+        "steps": "Infinity"
+      },
+       {
+        "id": "14CC2ED613263210",
+        "name": "hidden",
+        "steps": "Infinity"
+      },
+       {
+        "id": "93816B3A33D68DC2",
+        "name": "hidden",
+        "steps": "Infinity"
+      }
+    ],
+    "deployments": {
+      "902D168448F5ABD1": [
+        0.05,
+        0
+      ],
+      "E4F2A10A488569A7": [
+        6,
+        0
+      ],
+      "0B2FE98FA8D41FC3": [
+        6,
+        5.99
+      ],
+      "ECAA54DD91A8C8D4": [
+        0,
+        5.99
+      ]
+    }
+  },
+  "run": "concurrent",
+  "folder": [
+    "colog",
+    "labor"
+  ],
+  "format": [
+    "< exp# >.[< re# >.]< some words of exp >.< space type >"
+  ],
+  "codename": {
+    "gecko": "mighty gecko board as relay",
+    "oldtag mob": "mighty gecko board as tag",
+    "greentag green": "new custom board as tag",
+    "redrelay red": "new custom board as relay",
+    "$shorten": "simplified boards IDs from first 4 chars in lower case"
+  },
+  "space": {
+    "desk": [
+      "placed on workdesk, ~1m, continuous interfering"
+    ],
+    "free": [
+      "(almost-)free-obstacle space, ~1.4m, occasional human interfering"
+    ],
+    "vert": [
+      "placed in vertical space, make use of empty-bookshelf"
+    ],
+    "small": "across 4 workdesks, ~4.8m, not-sure-frequently interferences"
+  },
+  "shape": {
+    "line": "boards place in (nearly) in one line",
+    "triangle": "only relays placed on vertexes, tag are freely placed",
+    "retangle": "like triangle; plus a try to adjust the form as square"
+  }
+}

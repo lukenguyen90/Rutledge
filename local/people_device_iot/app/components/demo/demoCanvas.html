@@ -1,0 +1,376 @@
+<html>
+
+<head>
+    <style>
+    body {
+        padding: 0;
+        margin: 0;
+    }
+    </style>
+    <script type="text/javascript" src="/assets/js/p5/p5.min.js"></script>
+    <!-- <script type="text/javascript" src="/assets/js/p5/sketch.js"></script> -->
+    <!-- <script type="text/javascript" src="/assets/js/p5/p5.dom.js"></script> -->
+    <script type="text/javascript" src="/assets/js/p5/jquery-3.1.0.min.js"></script>
+    <script type="text/javascript">
+    // viewport
+    var viewportwidth;
+    var viewportheight;
+    // the more standards compliant browsers (mozilla/netscape/opera/IE7) use window.innerWidth and window.innerHeight
+    if (typeof window.innerWidth != 'undefined') {
+        viewportwidth = window.innerWidth,
+            viewportheight = window.innerHeight
+    }
+    // IE6 in standards compliant mode (i.e. with a valid doctype as the first line in the document)
+    else if (typeof document.documentElement != 'undefined' &&
+        typeof document.documentElement.clientWidth != 'undefined' &&
+        document.documentElement.clientWidth != 0) {
+        viewportwidth = document.documentElement.clientWidth,
+            viewportheight = document.documentElement.clientHeight
+    } else { // older versions of IE
+        viewportwidth = document.getElementsByTagName('body')[0].clientWidth,
+            viewportheight = document.getElementsByTagName('body')[0].clientHeight
+    }
+    viewportwidth -= 20;
+
+    // startsetup default variables
+    var data = {
+        zone: undefined,
+        device: {
+            list: {},
+            selected_id: ''
+        }
+    }
+
+    var display = {
+        main: {
+            width: viewportwidth,
+            height: viewportheight
+        },
+        zone: {
+            img: undefined,
+            width: 0,
+            height: 0,
+            grid: {
+                default: 11,
+                size: 11,
+                width: 0,
+                height: 0,
+                text_size: 10
+            },
+            mouse: {
+                x: 0,
+                y: 0,
+                hover: false
+            },
+            device: {
+                default: 9,
+                size: 9
+            }
+        },
+        info: {
+            width: viewportwidth,
+            height: 20
+        },
+        text: {
+            size: 5
+        },
+        padding: 20
+    }
+
+
+    var img;
+    var display_width = viewportwidth;
+    var display_height = viewportheight;
+    var zone_width = viewportwidth;
+    var zone_height = 0;
+    var grid_width = 100;
+    var grid_height = 100;
+    var grid_text_size = 10;
+    var zoom_number = 0;
+    var col_number = parseInt(display_width / 100);
+    var row_number = parseInt(display_height / 100);;
+    var device_selected_id = '';
+    var device_list = [];
+    var device_size = 20;
+    var isInside = false;
+    // end setup default variables
+
+    // P5 functions
+
+    function setup() {
+        createCanvas(display.main.width, display.main.height);
+    }
+    // Drawing functions
+    function draw() {
+        background(255);
+        if (typeof(data.zone) != 'undefined') {
+            draw_zone();
+            draw_device();
+        }
+        // if(typeof(img) != 'undefined'){
+        //     image(img, 0, 0, display_width, display_height);
+        // }
+        // draw mouse position
+        // if (isInside) {
+        //     draw_mouse_position();
+        // }
+        // draw_grid();
+        draw_info();
+    }
+    // draw zone view
+    function draw_zone() {
+        draw_zone_background()
+        draw_grid();
+    }
+
+    function draw_zone_background() {
+        stroke(240);
+        fill(245);
+        rect(display.padding - 1, display.padding - 1, display.zone.width + 1, display.zone.height + 1);
+        if (typeof(display.zone.img) != 'undefined') {
+            image(display.zone.img, display.padding, display.padding, display.zone.width, display.zone.height);
+        }
+    }
+    // Create grid view 
+    function draw_grid() {
+        textSize(display.zone.grid.text_size);
+        stroke(153);
+        fill(153);
+        var tp = {
+            'x': -display.zone.grid.text_size / 2,
+            'y': display.zone.grid.text_size * 1.5
+        }
+        for (var i = 0; i <= data.zone.width; i++) {
+            p1 = i * display.zone.grid.size;
+            p2 = 0;
+            p3 = i * display.zone.grid.size;
+            p4 = display.zone.height;
+            // line(p1 + display.padding, p2 + display.padding, p3 + display.padding, p4 + display.padding);
+            //text(i, p1 + display.padding, p2 + 10);
+        };
+        for (var j = 0; j <= data.zone.height; j++) {
+            p1 = 0;
+            p2 = j * display.zone.grid.size;
+            p3 = display.zone.width;
+            p4 = j * display.zone.grid.size;
+            // line(p1 + display.padding, p2 + display.padding, p3 + display.padding, p4 + display.padding);
+            // textAlign(RIGHT);
+            //text(j, p1 + 2, p2 + display.padding + display.zone.grid.text_size / 2);
+        };
+        // line(display.padding, display.zone.height + display.padding, display.zone.width + display.padding, display.zone.height + display.padding);
+        // line(display.zone.width + display.padding, display.padding, display.zone.width + display.padding, display.zone.height + display.padding);
+        // textAlign(LEFT);
+    }
+
+    function draw_mouse_position() {
+        var x1 = current_position.col * grid_width;
+        var y1 = current_position.row * grid_height;
+        var x2 = x1 + grid_width;
+        var y2 = y1 + grid_height;
+        stroke(0);
+        line(x1, y1 + 1, x2, y1 + 1);
+        line(x1 + 1, y1, x1 + 1, y2);
+        line(x2 - 1, y1, x2 - 1, y2);
+        line(x1, y2 - 1, x2, y2 - 1);
+    }
+
+    function draw_device() {
+        var default_space = display.padding + (display.zone.grid.size - display.zone.device.size) / 2;
+        Object.keys(data.device.list).map(function(mk) {
+            var d = data.device.list[mk];
+            // if (d.isDeploy == 1) {
+            switch (d.type.toLowerCase()) {
+                case 'server':
+                    stroke(21, 114, 153);
+                    fill(21, 114, 153);
+                    var p1 = d.col * display.zone.grid.size + display.padding - display.zone.device.size / 2;
+                    var p2 = d.row * display.zone.grid.size + display.padding - display.zone.device.size / 2;
+                    rect(p1, p2, display.zone.device.size, display.zone.device.size);
+                    break;
+                case 'relay':
+                    stroke(0, 191, 0);
+                    fill(21, 114, 153);
+
+                    var x1 = d.col * display.zone.grid.size + display.padding - display.zone.device.size / 2;
+                    var y1 = d.row * display.zone.grid.size + display.padding - display.zone.device.size / 2;
+                    var x2 = d.col * display.zone.grid.size + display.padding + display.zone.device.size / 2;
+                    var y2 = d.row * display.zone.grid.size + display.padding - display.zone.device.size / 2;
+                    var x3 = d.col * display.zone.grid.size + display.padding;
+                    var y3 = d.row * display.zone.grid.size + display.padding + display.zone.device.size / 2;
+
+                    // var x1 = d.col * display.zone.grid.size + display.padding + display.zone.device.size / 2;
+                    // var y1 = d.row * display.zone.grid.size + display.padding;
+                    // var x2 = d.col * display.zone.grid.size + display.padding;
+                    // var y2 = d.row * display.zone.grid.size + display.padding + display.zone.device.size;
+                    // var x3 = d.col * display.zone.grid.size + display.padding + display.zone.device.size;
+                    // var y3 = d.row * display.zone.grid.size + display.padding + display.zone.device.size;
+
+                    triangle(x1, y1, x2, y2, x3, y3);
+                    break;
+                case 'mobile':
+                    if (d.show) {
+                        textSize(10);
+                        stroke(66, 133, 244);
+                        fill(66, 133, 244);
+                        ellipse(d.col * display.zone.grid.size + display.padding, d.row * display.zone.grid.size + display.padding, display.zone.device.size, display.zone.device.size);
+                        textAlign(CENTER);
+                        stroke(255, 255, 255);
+                        text(d.name, d.col * display.zone.grid.size + display.padding, d.row * display.zone.grid.size + display.padding + display.zone.device.size);
+                        textAlign(LEFT);
+                    }
+                    break;
+            }
+            // }
+        });
+    }
+
+    function draw_info() {
+        var line_space = 20;
+        fill(153);
+        var start_width = display.padding;
+        var start_height = display.zone.height + display.padding + line_space;
+
+        var zone_name = typeof(data.zone) == 'undefined' ? 'undefined' : data.zone.name.toString();
+        text('Zone: ' + zone_name, start_width, start_height + line_space);
+    }
+
+    // setting functions
+    function setZoneInfo(oZone) {
+        data.zone = oZone;
+        zoom_number = 0;
+        display.zone.grid.size = display.zone.grid.default;
+        display.zone.device.size = display.zone.device.default;
+        if (typeof(data.zone) == 'undefined') {
+            display.zone.width = 0;
+            display.zone.height = 0;
+        } else {
+            display.zone.img = undefined;
+            if (data.zone.zoneimage) {
+                display.zone.img = loadImage(data.zone.zoneimage);
+            }
+            display.zone.width = data.zone.width * display.zone.grid.default;
+            display.zone.height = data.zone.height * display.zone.grid.default;
+        }
+        calCanvasSize();
+    }
+
+    function setDevice(devices) {
+        data.device.list = {};
+        devices.map(function(d) {
+            var coordinates = [0, 0];
+            if (d.coordinates != null) {
+                coordinates = d.coordinates.split(",");
+            }
+
+            newDevice = {
+                'id': d.id,
+                'col': 0 + coordinates[0],
+                'row': 0 + coordinates[1],
+                'coordinates': d.coordinates,
+                'type': d.type,
+                'name': d.name,
+                'isDeploy': d.isdeploy
+            };
+            data.device.list[d.id] = newDevice;
+        });
+    }
+
+
+    function setMobile(mobileItem) {
+        data.device.list[mobileItem.id] = mobileItem;
+    }
+
+    function resetSizeCanvas(zoom_plus) {
+        if (!(zoom_plus == -1 && zoom_number == -9)) {
+            zoom_number += zoom_plus;
+            display.zone.grid.size = display.zone.grid.default+(display.zone.grid.default * (zoom_number * 0.1));
+            display.zone.device.size = display.zone.device.default+zoom_number;
+            display.zone.width = data.zone.width * display.zone.grid.size;
+            display.zone.height = data.zone.height * display.zone.grid.size;
+            calCanvasSize();
+            // display_width = img.width + (img.width * (zoom_number * 0.1));
+            // display_height = img.height + (img.height * (zoom_number * 0.1));
+            // resetGrid();
+            // resetDeviceSize();
+        }
+    }
+
+    function calCanvasSize() {
+        display.main.width = display.zone.width + 2 * display.padding;
+        display.main.height = display.zone.height + display.info.height + 2 * display.padding;
+        if (display.main.width < viewportwidth) {
+            display.main.width = viewportwidth;
+        }
+        if (display.main.height < viewportheight) {
+            display.main.height = viewportheight;
+        }
+        resizeCanvas(display.main.width, display.main.height);
+    }
+
+    function resetGrid() {
+        grid_width = display_width / zonesize.x;
+        grid_height = display_height / zonesize.y;
+        grid_text_size = 10 + zoom_number;
+    }
+
+    function resetDeviceSize() {
+        device_size = round(grid_width / 3);
+        if (device_size < 5) {
+            device_size = 5;
+        }
+    }
+
+    function getRoomCoordinates(room_coordinate) {
+        console.log(room_coordinate);
+    }
+
+    function deleteMobile(mobileId) {
+        if (data.device.list[mobileId]) {
+            delete data.device.list[mobileId];
+        }
+    }
+
+    function hsbrand() {
+        var r, b, g, s = 0.72,
+            l = 0.5
+        var h = Math.round(Math.random() * 360)
+        var hq = (+h.toFixed(3)) / 60
+        var c = (1 - Math.abs(2 * l - 1)) * s
+        var x = (1 - Math.abs(hq % 2 - 1)) * c
+        var m = l - 0.5 * c
+        var revert = function(x) {
+            return Math.round((x + m) * 255).toString(16)
+        }
+        switch (Math.floor(hq)) {
+            case 6:
+            case 0:
+                r = c, g = x, b = 0;
+                break;
+            case 1:
+                r = x, g = c, b = 0;
+                break;
+            case 2:
+                r = 0, g = c, b = x;
+                break;
+            case 3:
+                r = 0, g = x, b = c;
+                break;
+            case 4:
+                r = x, g = 0, b = c;
+                break;
+            case 5:
+                r = c, g = 0, b = x;
+                break;
+            default:
+                r = 0, g = 0, b = 0;
+                break;
+        }
+        return '#' + revert(r) + revert(g) + revert(b)
+    }
+    </script>
+</head>
+
+<body>
+</body>
+
+</html>

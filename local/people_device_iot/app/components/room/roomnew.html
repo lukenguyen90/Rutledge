@@ -1,0 +1,66 @@
+<div id="breadcrumb">
+    <div class="container">
+        <ol class="breadcrumb">
+            <li><a ui-sref="home.profile">Add Room</a></li>
+        </ol>
+    </div>
+</div>
+<div class="container profile">
+    <div class="row">
+        <div class="col-sm-3 pull-left">
+            <div class="row">
+                <h2>Basic information</h2>
+            </div>
+            <div class="row" data-ng-init="getZoneInfo()">
+                <div class="input-group custom-control">
+                    <label>Name</label>
+                    <input type="text" class="form-control" ng-model="name">
+                </div>
+                <div class="input-group custom-control">
+                    <label>Coordinate X</label>
+                    <input type="text" class="form-control" ng-model="coordinatex" placeholder="100,200">
+                </div>
+                <div class="input-group custom-control">
+                    <label>Coordinate Y</label>
+                    <input type="text" class="form-control" ng-model="coordinatey" placeholder="200,300">
+                </div>
+                <div class="input-group custom-control">
+                    <label>Description</label>
+                    <textarea rows="5" type="text" class="form-control" ng-model="description"></textarea>
+                </div>
+                <div class="input-group custom-control">
+                    <label>Location</label>
+                    <select class="form-control" ng-model="locationId" ng-change="selectZoneByLocation(locationId)">
+                        <option value="{{location.id}}" ng-repeat="location in list_location">{{location.name}}</option>
+                    </select>
+                </div>
+                <div class="input-group custom-control">
+                    <label>Zone</label>
+                    <select class="form-control" ng-model="zoneId" ng-change="selectZone(zoneId)">
+                        <option value="{{zone.id}}" ng-repeat="zone in list_zone">{{zone.name}}</option>
+                    </select>
+                </div>
+                <div class="input-group custom-control">
+                    <label>Status</label>
+                    <div>
+                        <input type="radio" value="1" ng-model="status">&nbsp; Active</label>
+                        <input type="radio" value="0" ng-model="status">&nbsp; Inactive</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-9 pull-right">
+            <iframe src="/app/components/room/zoneCanvas.html" ng-mouseenter="hoverInCanvas()" ng-mouseleave="outCanvas()" id="canvas_iframe" width="100%" height="490px" style="display:block;"></iframe>
+            <br>
+            <button class="btn btn-default btn-zoom" ng-click="zoomOut()" type="button" name="zoomOut" value="Zoom Out" style="width:120px">Zoom Out</button>
+            <button class="btn btn-default btn-zoom" ng-click="zoomIn()" type="button" name="zoomIn" value="Zoom In" style="width:120px">Zoom In</button>
+            <button class="btn btn-default btn-zoom" ng-click="clearNode()" type="button" name="zoomOut" value="Zoom Out" style="width:120px">Clear</button>
+            <div class="alert alert-success" ng-show="errMessage">
+                <strong>Alert!</strong> Can not add a new room
+            </div>
+            <div class="pull-right">
+                <input class="btn btn-default btn-zoom" ng-click="saveRoomInfo(picFile)" type="button" value="Save">
+            </div>
+        </div>
+    </div>
+</div>

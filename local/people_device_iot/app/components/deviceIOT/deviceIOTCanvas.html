@@ -1,0 +1,178 @@
+<html>
+	<head>
+		<style> body {padding: 0; margin: 0;} </style>
+	    <script type="text/javascript" src="/assets/js/p5/p5.min.js"></script>
+	    <script type="text/javascript" src="/assets/js/p5/sketch.js"></script>
+		<script type="text/javascript" src="/assets/js/p5/jquery-3.1.0.min.js"></script>
+		<script type="text/javascript">
+			var dWidth;
+			var dHeight;
+			var woh;
+			var zoom_number = 0;
+			var bug1;  // Declare objects
+			var bug2;
+			var bug3;
+			var bug4;
+			var img;
+			var grid = 60;
+			var xNumber;
+			var yNumber;
+			var zoneId;
+			var bugs = [];
+			var filter_device = {'type':'server','id':''};
+			var replaylist 	= [];
+			var serverlist 	= [];
+			var mobilelist 	= {};
+			var device_size = 20;
+			var default_plus_size = (grid-device_size)/2;
+
+			function preload() {  // preload() runs once
+				img = loadImage('/assets/img/deviceiot/mapRasia.png');
+			}
+			function setup() {
+				dWidth = img.width;
+				dHeight = img.height;
+				woh = dWidth/dHeight;
+				xNumber = round(dWidth/grid);
+				yNumber = round(dHeight/grid);
+
+				createCanvas(dWidth, dHeight);
+			}
+
+			function draw() {
+				image(img, 0, 0, dWidth, dHeight);
+				draw_grid();
+				draw_device();
+			}
+			// Create grid view 
+			function draw_grid(){
+				stroke(153);
+				for (var i = 0; i <= xNumber; i++) {
+					p1 = i*grid;
+					p2 = 0;
+					p3 = i*grid;
+					p4 = dHeight;
+					line(p1, p2, p3, p4);
+					textSize(10);
+					fill(153);
+					text(i, p1+5, p2+15);
+				};
+				for (var j = 0; j <= yNumber; j++) {
+					p1 = 0;
+					p2 = j*grid;
+					p3 = dWidth;
+					p4 = j*grid;
+					line(p1, p2, p3, p4);
+					textSize(10);
+					fill(153);
+					text(j, p1+5, p2+15);
+				};
+			}
+			function draw_device(){
+				switch(filter_device['type']){
+					case 'server':
+						serverlist.map(function(s) { 
+							fill(21,114,153);
+							rect(s.position_x, s.position_y, device_size, device_size);
+						});
+					break;
+					case 'relay':
+						replaylist.map(function(r) { 
+							fill(21,114,153);
+							triangle(r.x1, r.y1, r.x2, r.y2, r.x3, r.y3);
+						});
+					break;
+					case 'mobile':
+						Object.keys(mobilelist).map(function (mk) {
+							textSize(10);
+							fill(0,191,0);
+							ellipse(mobilelist[mk].position_x, mobilelist[mk].position_y, device_size, device_size);
+							text(mobilelist[mk].name, mobilelist[mk].position_x-device_size , mobilelist[mk].position_y+device_size);
+						});
+					break;
+				}
+			}
+
+			function setDevice(devices){
+				for (var i = devices.length - 1; i >= 0; i--) {
+					if( devices[i].coordinates !== null ){
+						var sType = devices[i].type.toLowerCase();
+						var coordinates = devices[i].coordinates.split(",");
+						var coordinates_x = parseInt(coordinates[0]);
+						var coordinates_y = parseInt(coordinates[1]);
+						switch(sType){
+							case 'server':
+								var newItem = {
+									'deviceid'	: devices[i].deviceid,
+									'position_x': (coordinates_x * grid)+default_plus_size,
+									'position_y': (coordinates_y * grid)+default_plus_size,
+									'col'		: coordinates_x ,
+									'row' 		: coordinates_y 
+								}
+								serverlist.push(newItem);
+							break;
+							case 'relay':
+								var x = coordinates_x * grid;
+								var y = coordinates_y * grid;
+								var newItem = {
+									'deviceid'	: devices[i].deviceid,
+									'x1'		: x+(default_plus_size*1.5),
+									'y1' 		: y+default_plus_size,
+									'x2'		: x+default_plus_size,
+									'y2' 		: y+(default_plus_size*2),
+									'x3'		: x+(default_plus_size*2),
+									'y3' 		: y+(default_plus_size*2),
+									'col'		: coordinates_x ,
+									'row' 		: coordinates_y 
+								}
+								replaylist.push(newItem);
+							break;
+						}
+					}
+				}
+			}
+			function setMobile(mobile){
+				var new_position_x = (mobile.position[0]*grid)+(default_plus_size*1.5);
+				var new_position_y = (mobile.position[1]*grid)+(default_plus_size*1.5);
+				if( typeof(mobilelist[mobile.mobile]) !== 'undefined' ){
+					var move_space_x = new_position_x-mobilelist[mobile.mobile].position_x;
+					var move_space_y = new_position_y-mobilelist[mobile.mobile].position_y;
+					var i = 1;
+					var myTimer = setInterval(function(){
+						i += 1;
+							mobilelist[mobile.mobile].position_x += (move_space_x/10);
+							mobilelist[mobile.mobile].position_y += (move_space_y/10);
+						if(i==10){
+							mobilelist[mobile.mobile].position_x = new_position_x;
+							mobilelist[mobile.mobile].position_y = new_position_y;
+							clearInterval(myTimer);
+						}
+					}, 50);
+					
+				}else{
+					var newItem = {
+						'mobileid'	: mobile.mobile,
+						'position_x': new_position_x,
+						'position_y': new_position_y,
+						'name'		: mobile.name
+					};
+					mobilelist[mobile.mobile] = newItem;
+				}
+			}
+			function setFilter(ft){
+				filter_device = ft;
+			}
+
+			function resetSizeCanvas(zoom_plus){
+				if( !(zoom_plus == -1 && zoom_number == -9) ){
+					zoom_number += zoom_plus;
+					cWidth = dWidth+(dWidth * (zoom_number*0.1));
+					cHeight = dHeight+(dHeight * (zoom_number*0.1));
+					$("#defaultCanvas0").css({"width":cWidth,"height":cHeight});
+				}
+			}
+		</script>
+	</head>
+	<body>
+	</body>
+</html>

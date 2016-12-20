@@ -1,0 +1,36 @@
+<div id="breadcrumb">
+    <div class="container">
+        <ol class="breadcrumb">
+            <li><a ui-sref="home.peopleiot">People IOT Locator</a></li>
+        </ol>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="action-box">
+                <div class="select-box">
+                    <select class="form-control" ng-model="zoneId" ng-change="selectZone(zoneId)">
+                        <option value="{{zone.id}}" ng-repeat="zone in list_zone">{{zone.name}}</option>
+                    </select>
+                </div>
+                <div class="select-box">
+                    <select class="form-control" ng-model="locationId" ng-change="selectZoneByLocation(locationId)">
+                        <option value="{{location.id}}" ng-repeat="location in list_location">{{location.name}}</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="clear-bottom"></div>
+    <div class="row">
+        <div class="col-md-12">
+            <iframe src="/app/components/demo/demoCanvas.html" ng-mouseenter="hoverInCanvas()" ng-mouseleave="outCanvas()" id="canvas_iframe" width="100%" height="490px" style="display:block;"></iframe>
+            <button class="btn btn-default btn-zoom" ng-click="zoomOut()" type="button" name="zoomOut" value="Zoom Out" style="width:120px">Zoom Out</button>
+            <button class="btn btn-default btn-zoom" ng-click="zoomIn()" type="button" name="zoomIn" value="Zoom In" style="width:120px">Zoom In</button>
+        </div>
+    </div>
+    <div class="row" id="content">
+    </div>
+    <div class="clear-bottom"></div>
+</div>

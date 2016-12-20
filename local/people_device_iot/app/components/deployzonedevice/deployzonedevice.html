@@ -1,0 +1,63 @@
+<div id="breadcrumb">
+    <div class="container">
+        <ol class="breadcrumb">
+            <li><a href="#">Device IOT Locator - {{nameZone}}</a></li>
+        </ol>
+    </div>
+</div>
+<div class="container" id="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="action-box">
+                <div class="input-group search-box">
+                    <input type="text" class="form-control" id="search" ng-model="searchPeople">
+                    <div class="input-group-addon"><i class="fa fa-search"></i></div>
+                </div>
+                <div class="select-box">
+                    <select class="form-control">
+                        <option>Relay</option>
+                        <option>Mobile</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="clear-bottom"></div>
+    <div class="row">
+        <div class="col-md-12">
+            <div style="overflow: scroll; height: 490px">
+                <canvas id="canvas"></canvas>
+            </div>
+            </br>
+            </br>
+            <!--  <button class="btn btn-default btn-zoom" ng-click="zoomOut()" type="button" name="zoomOut" value="Zoom Out" style="width:120px">Zoom Out</button>
+            <button class="btn btn-default btn-zoom" ng-click="zoomIn()" type="button" name="zoomIn" value="Zoom In" style="width:120px">Zoom In</button> -->
+            <button class="btn btn-default btn-zoom" ng-click="save()" type="button" name="save" value="Save" style="width:120px">Save</button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <h3 class="title">DEVICE LIST</h3>
+            <table class="table table-bordered">
+                <thead>
+                    <tr class="header-table">
+                        <th>Device ID</th>
+                        <th>Type</th>
+                        <th>Coordinates</th>
+                        <th>Active</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="device in devicelist">
+                        <td>{{device.deviceid}}</td>
+                        <td>{{device.type}}</td>
+                        <td>{{device.coordinates}}</td>
+                        <td id="{{device.deviceid}}">
+                            <button class="btn btn-default btn-zoom" ng-hide="device.coordinates" value="Add" ng-click="addWallRelay(device.deviceid)">Add</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,39 @@
+<div id="breadcrumb">
+    <div class="container">
+        <ol class="breadcrumb">
+            <li><a ui-sref="home.profile">Edit Notification</a></li>
+        </ol>
+    </div>
+</div>
+<div class="container profile">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="col-sm-6 pull-left">
+                <div class="row">
+                    <h2>Basic information</h2>
+                </div>
+                <div class="row" data-ng-init="getStaffInfo()">
+                    <div class="input-group custom-control">
+                        <label>Title</label>
+                        <input type="text" class="form-control" ng-model="title">
+                    </div>
+                    <div class="input-group custom-control">
+                        <label>Message</label>
+                        <textarea rows="7" type="text" class="form-control" ng-model="message"></textarea>
+                    </div>
+                    <div class="input-group custom-control">
+                        <label>Level</label>
+                        <select class="form-control" ng-model="level">
+                            <option value="0">High</option>
+                            <option value="1">Midle</option>
+                            <option value="2">Low</option>
+                        </select>
+                    </div>
+                    <div class="pull-right">
+                        <input class="btn btn-default btn-edit" ng-click="updateNotification()" type="button" value="Save">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

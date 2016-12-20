@@ -1,0 +1,31 @@
+<div id="breadcrumb">
+    <div class="container">
+        <ol class="breadcrumb">
+            <li><a href="#">Notification</a></li>
+        </ol>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="option-box">
+                <button ng-click="addNotification()" class="btn btn-default"><i class="fa fa-plus" aria-hidden="true"></i>New Notification</button>
+            </div>
+            <div class="action-box">
+                <div class="input-group search-box">
+                    <input type="text" class="form-control" id="search" ng-model="searchDevice">
+                    <div class="input-group-addon" id="btnSearch"><i class="fa fa-search"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="clear-bottom"></div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="list-peolple">
+                <table class="table table-striped table-bordered" width="100%" datatable="" dt-options="dtOptions" dt-columns="dtColumns" dt-instance="dtInstance">
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
